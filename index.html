@@ -1034,8 +1034,8 @@
             // Load simple inputs
             document.getElementById('input-creature-type').value = data.creatureType || 'Robot';
             document.getElementById('input-card-name').value = data.cardName || 'Gemini';
-            document.getElementById('input-card-hp').value = data.cardHp || '120';
-            document.getElementById('input-card-ac').value = data.cardAc || '15';
+            document.getElementById('input-card-hp').value = data.cardHp ?? '';
+            document.getElementById('input-card-ac').value = data.cardAc ?? '';
             document.getElementById('input-card-type').value = data.cardType || 'colorless';
             document.getElementById('input-border-color').value = data.borderColor || '#f9d71c';
             document.getElementById('input-flavor-text').value = data.flavorText || '';
