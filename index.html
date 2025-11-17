@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" id="html-root"> <head>
+<html lang="en" id="html-root">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Card Creator</title>
@@ -16,16 +17,14 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Custom styles for the card */
+        /* --- Base & Dark Mode --- */
         body {
             font-family: 'Inter', sans-serif;
-            /* background-color: #f0f2f5; */ /* Handled by Tailwind */
         }
 
-        /* Dark mode toggle styles */
         .toggle-checkbox:checked {
             @apply: bg-indigo-600;
             right: 0;
@@ -37,93 +36,126 @@
             @apply: translate-x-full;
         }
 
-        /* Using a specific font for the card name/HP */
+        /* --- Card Typography --- */
         .font-card-title {
-            font-family: 'Luckiest Guy', cursive;
-            text-shadow: 1px 1px 3px #000, -1px -1px 3px #000, 1px -1px 3px #000, -1px 1px 3px #000; /* Stronger consolidated shadow */
-            font-size: 1.6rem; /* Base size for main title */
-            color: white; /* Default to white for these elements */
+            font-family: 'Bebas Neue', cursive; 
+            text-shadow: 1px 1px 3px #000, -1px -1px 3px #000, 1px -1px 3px #000, -1px 1px 3px #000;
+            font-size: 1.9rem; 
+            color: white;
         }
         
-        /* Style for the new main name */
         .card-main-name-container {
             position: absolute;
-            /* === PRINT SAFE FIX === */
-            /* Increased top/left/right to move text into safe area */
-            top: 60px; 
-            left: 34px;
-            right: 34px;
-            /* === END FIX === */
+            top: 30px; 
+            left: 14px;
+            right: 14px;
             z-index: 2;
         }
 
-        /* Style for creature type - now uses font-card-title but smaller */
         .font-creature-type {
-            font-family: 'Luckiest Guy', cursive;
+            font-family: 'Bebas Neue', cursive; 
             text-shadow: 1px 1px 3px #000, -1px -1px 3px #000, 1px -1px 3px #000, -1px 1px 3px #000;
-            font-size: 1.1rem; /* Smaller than main name */
+            font-size: 1.6rem;
             color: white;
-            line-height: 1; /* Ensure no extra line height */
+            line-height: 1;
         }
         
-        /* Base card dimensions - now full-art by default */
+        /* --- Tier Colors & Styles --- */
+        .tier-common { color: #FFFFFF; }
+        .tier-uncommon { color: #4CAF50; }
+        .tier-rare { color: #00B0FF; }
+        .tier-masterwork { color: #FFD700; }
+        .tier-epic { color: #9C27B0; }
+        .tier-legendary { color: #FF9800; }
+        .tier-mythic { color: #800000; }
+        
+        .tier-unique {
+            color: #212121;
+            text-shadow: 1px 1px 2px #FFF, -1px -1px 2px #FFF, 1px -1px 2px #FFF, -1px 1px 2px #FFF;
+        }
+
+        .tier-exotic {
+            color: #FF1493; /* Deep Pink */
+            text-shadow: 1px 1px 2px #FFF, -1px -1px 2px #FFF, 1px -1px 2px #FFF, -1px 1px 2px #FFF, 0 0 5px #FFF;
+        }
+        
+        /* --- Card Layout & Structure --- */
         .card {
             width: 100%;
-            max-width: 380px; /* Max width for better visibility on desktop */
-            aspect-ratio: 63 / 88; /* Official TCG card ratio (close to 2.5/3.5) */
-            border: 12px solid #f9d71c; /* Yellow border */
+            max-width: 380px;
+            aspect-ratio: 63 / 88;
+            border: 12px solid #f9d71c;
             border-radius: 18px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.25);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            /* This ensures any peek-through is black */
             background: #000000; 
-            position: relative; /* Needed for absolute positioning of full art image */
-            justify-content: flex-end; /* PUSH ALL CONTENT TO THE BOTTOM */
-            padding-bottom: 0px; /* Reduced padding to move text down */
+            position: relative;
+            justify-content: flex-end;
+            padding-bottom: 0px;
         }
 
-        /* Card Header */
+        /* --- Card Header & Stats (HP/AC) --- */
         .card-header {
-            /* === PRINT SAFE FIX === */
-            /* Increased padding and top to move text into safe area */
-            padding: 0 34px 8px 34px;
-            top: 34px; 
-            /* === END FIX === */
+            top: 6px; 
+            padding: 0 14px 8px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: absolute; /* Position over the image */
+            position: absolute;
             left: 0;
             right: 0;
-            z-index: 2; /* Ensure header content is above the image */
-            height: 38px; /* Fixed height to control spacing */
+            z-index: 2;
+            height: 38px;
+        }
+        
+        #card-hp-container, #card-ac-container {
+            display: flex;
+            align-items: baseline;
+            line-height: 1;
         }
 
-        /* New element for the top gradient overlay */
+        #card-hp-container .font-card-title, #card-ac-container .font-card-title {
+            font-size: 1.6rem; 
+            margin-left: 2px;
+        }
+        #card-hp-container .font-creature-type, #card-ac-container .font-creature-type {
+            font-size: 1.6rem; 
+            margin-right: 2px;
+            font-weight: 400;
+        }
+
+        /* --- Card Overlays (Gradients) --- */
         .card-top-overlay {
             position: absolute;
             top: -2px; 
             left: -2px;
             right: -2px;
-            /* Increased bleed to -10px to guarantee overlap on render */
             bottom: -10px; 
             background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.00) 25%);
             z-index: 1;
             pointer-events: none;
         }
         
-        /* New element for the vignette overlay */
+        .card-bottom-overlay {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -10px;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.00) 60%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
         .card-vignette-overlay {
             position: absolute;
             top: -2px;
             left: -2px;
             right: -2px;
-            /* Increased bleed to -10px to guarantee overlap on render */
             bottom: -10px;
             display: none;
-            /* Rectangular vignette */
             background: linear-gradient(to bottom, 
                 rgba(0,0,0,0.7) 0%, 
                 rgba(0,0,0,0.1) 30%, 
@@ -142,42 +174,12 @@
             pointer-events: none;
         }
 
-        #card-name {
-            /* Styles are handled by .font-card-title */
-        }
-
-        #card-creature-type {
-             /* Styles handled by .font-creature-type */
-        }
-        
-        #card-hp-container, #card-ac-container {
-            display: flex;
-            align-items: baseline; /* Align numbers and labels nicely */
-            line-height: 1;
-        }
-
-        #card-hp-container .font-card-title, #card-ac-container .font-card-title {
-            font-size: 1.3rem; /* Slightly smaller for AC/HP numbers */
-            margin-left: 2px;
-        }
-        #card-hp-container .font-creature-type, #card-ac-container .font-creature-type {
-            font-size: 1.5rem; /* Adjusted bigger for AC/HP labels */
-            margin-right: 2px;
-            font-weight: 400; /* Labels can be less bold */
-        }
-        
-        #card-energy-icon {
-            font-size: 1.8rem; /* Slightly smaller */
-            filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.5));
-        }
-
-        /* Card Image Area (for standard layout) */
+        /* --- Card Image Area --- */
         .card-image-area {
             position: absolute;
             top: -2px;
             left: -2px;
             right: -2px;
-            /* Increased bleed to -10px to guarantee overlap on render */
             bottom: -10px; 
             margin: 0;
             border: none;
@@ -189,7 +191,6 @@
             color: white;
             font-weight: 600;
             overflow: hidden;
-            /* Changed placeholder from #a0a0a0 to #000000 */
             background: #000000; 
             background-size: 100%;
             background-position: 50% 50%;
@@ -197,48 +198,49 @@
         }
 
         .card-image-area img {
-            /* We no longer use an <img> tag, handled by background-image */
             display: none;
         }
         
-        /* Flavor text / stats bar */
+        /* --- Card Body (Attacks, Flavor) --- */
         .card-stats-bar {
             background: none; 
             border-top: none;
             border-bottom: none; 
-            /* === OVERLAP FIX === */
-            /* Increased margin-bottom from 30px to 60px to clear footer */
-            margin: 2px 34px 60px 34px; 
-            /* === END FIX === */
+            margin: 2px 14px 30px 14px; /* Vertically positioned by bottom margin */
             padding: 0; 
             position: relative; 
             z-index: 2;
-            color: white;
-            text-shadow: 1px 1px 2px #000, 0 0 5px #000;
-            font-size: 0.8rem; 
+            color: #E5E7EB; /* UPDATED: Was white, now light grey */
             font-style: italic;
-            text-align: left; /* CHANGED from center */
+            text-align: center; /* UPDATED: Was left, now center */
+            /* UPDATED for readability */
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 0.9rem;
+            line-height: 1.3;
+            text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
         }
 
-        /* Attacks Section */
         .card-attacks {
             flex-grow: 0;
             background: none;
             border: none; 
-            /* === PRINT SAFE FIX === */
-            /* Increased L/R margin to 34px */
-            margin: 18px 34px 0 34px; 
-            /* === END FIX === */
+            margin: 18px 14px 0 14px; 
             padding: 0; 
             position: relative; 
             z-index: 2;
             color: white; 
-            text-shadow: 1px 1px 2px #000; 
         }
         
+        /* --- ATTACK STYLING --- */
         .attack {
-            margin-bottom: 8px;
+            margin: 0;
+            padding: 0;
+            border: none;
         }
+        /* All divider CSS is removed */
+        /* --- END ATTACK STYLING --- */
+
 
         .attack-header {
             display: flex;
@@ -247,56 +249,42 @@
             margin-bottom: 4px;
         }
         
-        .attack-cost {
-            font-size: 1.75rem;
-            letter-spacing: -2px;
-            filter: drop-shadow(0 0 3px rgba(0,0,0,1)); /* Stronger black shadow for icons */
-            padding-top: 0; /* Align with text */
-            flex-shrink: 0; /* Don't let it shrink */
-        }
-        
         .attack-name {
+            /* UPDATED for readability */
+            font-family: 'Inter', sans-serif;
             font-weight: 700;
-            font-size: 1.1rem;
-            text-shadow: 1px 1px 2px #000, 0 0 5px #000; /* Stronger black shadow */
+            font-size: 1.0rem;
+            text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
         }
         
         .attack-damage {
+            /* UPDATED for readability */
+            font-family: 'Inter', sans-serif;
             font-weight: 700;
-            font-size: 1.25rem;
-            text-shadow: 1px 1px 2px #000, 0 0 5px #000; /* Stronger black shadow */
+            font-size: 1.0rem;
+            text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
         }
 
         .attack-description {
+            /* UPDATED for readability */
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
             font-size: 0.9rem;
+            line-height: 1.3;
+            text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
         }
         
-        .attack-divider {
-            border-top: 1px solid rgba(255,255,255,0.3); /* Lighter divider for full art */
-            margin: 6px 0;
-        }
-
-        .ability-badge {
-            font-family: 'Luckiest Guy', cursive;
-            font-size: 0.9rem;
-            color: #f7b731; /* Changed to a gold color */
-            text-shadow: 1px 1px 1px #000; /* Stronger black shadow */
-            margin-right: 8px;
-        }
-
-        /* NEW CSS for alignment */
         .attack-layout {
             display: flex;
-            align-items: flex-start; /* Align top */
-            gap: 8px; /* Space between cost and text */
+            align-items: flex-start;
+            gap: 8px;
         }
         .attack-details {
-            flex-grow: 1; /* Take remaining space */
+            flex-grow: 1;
         }
         
-        /* Footer (Weakness/Resistance/Retreat) */
         .card-wrr-bar {
-            display: none; /* REMOVED: Hide in full-art mode */
+            display: none; /* Hidden in full-art mode */
         }
         
         .wrr-item {
@@ -307,64 +295,37 @@
         .wrr-item span:first-child {
             font-size: 0.7rem;
             font-weight: 400;
-            color: white; /* Ensure label is white */
-            text-shadow: 1px 1px 2px #000; /* Add shadow */
+            color: white;
+            text-shadow: 1px 1px 2px #000;
         }
 
-        /* Footer */
+        /* --- Card Footer --- */
         .card-footer {
-            font-size: 0.7rem;
-            /* === PRINT SAFE FIX === */
-            /* Increased L/R/B padding to 34px */
-            padding: 5px 34px 34px 34px; 
-            /* === END FIX === */
-            font-weight: 600;
-            position: absolute; /* Position absolutely at the bottom */
+            /* UPDATED for readability */
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 400; /* CHANGED from 600 */
+            line-height: 1.3;
+            text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
+            
+            padding: 5px 14px 10px 14px; 
+            position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
             z-index: 2;
             background: none; 
             color: white; 
-            text-shadow: 1px 1px 2px #000, -1px -1px 2px #000; 
-            display: flex; /* Use flexbox for layout */
-            justify-content: space-between; /* Space out the items */
-            align-items: flex-end; /* Align items to the bottom of the footer */
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
         }
         
         .card-footer-item {
-            /* Styles for individual items in the footer */
-            line-height: 1.2; /* Adjust line height for better spacing */
+            line-height: 1.2;
         }
-
-        /* Dynamic Backgrounds (Header Fallback) */
-        .type-none { background: linear-gradient(135deg, #d4d4d4, #a0a0a0); } /* Added for None type */
-        .type-colorless { background: linear-gradient(135deg, #d4d4d4, #a0a0a0); }
-        .type-fire { background: linear-gradient(135deg, #FF9D55, #EF5350); }
-        .type-water { background: linear-gradient(135deg, #76BDFE, #42A5F5); }
-        .type-grass { background: linear-gradient(135deg, #9CCC65, #7CB342); }
-        .type-electric { background: linear-gradient(135deg, #FFD740, #FBC02D); }
-        .type-psychic { background: linear-gradient(135deg, #BA68C8, #AB47BC); }
-        .type-fighting { background: linear-gradient(135deg, #D4A373, #C68642); }
-        .type-darkness { background: linear-gradient(135deg, #757575, #545454); }
-        .type-metal { background: linear-gradient(135deg, #B0BEC5, #90A4AE); }
-        .type-fairy { background: linear-gradient(135deg, #F48FB1, #E91E63); }
-        .type-dragon { background: linear-gradient(135deg, #8E2DE2, #4A00E0); }
-        /* NEW TYPES */
-        .type-god { background: linear-gradient(135deg, #FFD700, #F0E68C); }
-        .type-time { background: linear-gradient(135deg, #00BFFF, #87CEEB); }
-        .type-space { background: linear-gradient(135deg, #483D8B, #000000); }
-        .type-anti-god-magic { background: linear-gradient(135deg, #FF1493, #8B0000); }
-        .type-necromancy { background: linear-gradient(135deg, #6A0DAD, #4B0082); }
-        .type-cold { background: linear-gradient(135deg, #B0E0E6, #ADD8E6); }
-        .type-poison { background: linear-gradient(135deg, #9ACD32, #6B8E23); }
-        .type-death { background: linear-gradient(135deg, #2F4F4F, #000000); }
-        .type-life { background: linear-gradient(135deg, #90EE90, #32CD32); }
-        .type-holy { background: linear-gradient(135deg, #FFFACD, #FFFFE0); }
-        .type-illusion { background: linear-gradient(135deg, #DA70D6, #9932CC); }
-        .type-machine { background: linear-gradient(135deg, #808080, #A9A9A9); }
-
-        /* Loading Spinner */
+        
+        /* --- Utility Classes (Loader, Modal) --- */
         .loader {
             width: 48px;
             height: 48px;
@@ -380,7 +341,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Modal */
         .modal {
             position: fixed;
             top: 0;
@@ -401,16 +361,15 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            color: #333; /* Dark text for light modal */
+            color: #333;
         }
         .dark .modal-content {
-            background: #374151; /* gray-700 */
-            color: #f3f4f6; /* gray-100 */
+            background: #374151;
+            color: #f3f4f6;
         }
         .dark .modal-content th {
-            color: #f3f4f6; /* gray-100 */
+            color: #f3f4f6;
         }
-
 
     </style>
 </head>
@@ -452,6 +411,20 @@
                                 <input type="text" id="input-creature-type" value="Robot" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                             <div class="col-span-2 md:col-span-1">
+                                <label for="input-card-tier" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tier</label>
+                                <select id="input-card-tier" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <option>Common</option>
+                                    <option>Uncommon</option>
+                                    <option>Rare</option>
+                                    <option>Masterwork</option>
+                                    <option>Epic</option>
+                                    <option>Legendary</option>
+                                    <option>Exotic</option>
+                                    <option>Mythic</option>
+                                    <option>Unique</option>
+                                </select>
+                            </div>
+                            <div class="col-span-2">
                                 <label for="input-card-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Card Name</label>
                                 <input type="text" id="input-card-name" value="Gemini" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
@@ -464,42 +437,8 @@
                                 <input type="number" id="input-card-ac" value="15" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                             <div class="col-span-2 md:col-span-1">
-                                <label for="input-card-type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Energy Type</label>
-                                <select id="input-card-type" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    <option value="none" selected>None</option> <option value="colorless">Colorless</option>
-                                    <option value="fire">Fire</option>
-                                    <option value="water">Water</option>
-                                    <option value="grass">Grass</option>
-                                    <option value="electric">Electric</option>
-                                    <option value="psychic">Psychic</option>
-                                    <option value="fighting">Fighting</option>
-                                    <option value="darkness">Darkness</option>
-                                    <option value="metal">Metal</option>
-                                    <option value="fairy">Fairy</option>
-                                    <option value="dragon">Dragon</option>
-                                    <option value="god">God</option>
-                                    <option value="time">Time</option>
-                                    <option value="space">Space</option>
-                                    <option value="anti-god-magic">Anti God Magic</option>
-                                    <option value="necromancy">Necromancy</option>
-                                    <option value="cold">Cold</option>
-                                    <option value="poison">Poison</option>
-                                    <option value="death">Death</option>
-                                    <option value="life">Life</option>
-                                    <option value="holy">Holy</option>
-                                    <option value="illusion">Illusion</option>
-                                    <option value="machine">Machine</option>
-                                </select>
-                            </div>
-                            <div class="col-span-2 md:col-span-1">
                                 <label for="input-border-color" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Border Color</label>
                                 <input type="color" id="input-border-color" value="#f9d71c" class="mt-1 block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm">
-                            </div>
-                            <div class="col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Energy Legend</label>
-                                <button type="button" id="view-energy-btn" class="mt-1 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    View Energy Types
-                                </button>
                             </div>
                             <div class="col-span-2">
                                 <label for="input-overlay-color" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Overlay Color (for gradients)</label>
@@ -554,11 +493,10 @@
                     </fieldset>
 
                     <fieldset id="attacks-manager" class="border dark:border-gray-600 p-4 rounded-md">
-                        <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Attacks & Abilities</legend>
-                        <div id="attack-forms-container" class="space-y-4">
-                            </div>
+                        <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Attacks</legend> <div id="attack-forms-container" class="space-y-4">
+                        </div>
                         <button type="button" id="add-attack-btn" class="mt-4 w-full inline-flex justify-center rounded-md border border-dashed border-gray-400 dark:border-gray-500 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
-                            + Add Attack / Ability
+                            + Add Attack
                         </button>
                     </fieldset>
                     
@@ -596,7 +534,7 @@
                         Download for Print (with Border)
                     </button>
                     <p class="text-xs text-gray-500 dark:text-gray-400 text-center">Use the 'Bleed' button for services that require a 36px bleed, as specified in the PDF.</p>
-                    </form>
+                </form>
             </div>
 
             <div class="flex flex-col items-center">
@@ -606,9 +544,10 @@
                     
                     <div id="card-top-overlay" class="card-top-overlay"></div>
                     <div id="card-vignette-overlay" class="card-vignette-overlay"></div>
+                    <div id="card-bottom-overlay" class="card-bottom-overlay"></div> 
                     
                     <div class="card-header">
-                        <h3 id="card-creature-type" class="font-creature-type">Robot</h3>
+                        <h3 id="card-creature-type" class="font-creature-type tier-common">Robot</h3>
                         <div class="flex items-center space-x-3">
                             <div id="card-ac-container" class="flex items-center space-x-1">
                                 <span class="font-creature-type">AC</span>
@@ -618,7 +557,6 @@
                                 <span class="font-creature-type">HP</span>
                                 <span id="card-hp" class="font-card-title ml-1">120</span>
                             </div>
-                            <span id="card-energy-icon">⚪</span>
                         </div>
                     </div>
                     
@@ -633,14 +571,14 @@
                     </div>
                     
                     <div class="card-attacks" id="card-attacks-output">
-                        </div>
+                    </div>
 
                     <div class="card-stats-bar">
                         <span id="card-flavor-text">It constantly processes information from across the web to answer any question.</span>
                     </div>
 
                     <div id="card-wrr-bar" class="card-wrr-bar">
-                        </div>
+                    </div>
                     
                     <div class="card-footer">
                         <div class="card-footer-item">
@@ -649,7 +587,7 @@
                         <div class="card-footer-item text-right">
                             <span id="card-set-name">Galactic Genesis</span>
                             <span id="card-number" class="ml-2">1/100</span> 
-                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -657,113 +595,19 @@
         </div>
     </div>
 
-    <div id="energy-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold">Energy Type Legend</h3>
-                <button type="button" id="close-modal-btn" class="text-2xl font-bold">&times;</button>
-            </div>
-            <p class="mb-4">Use these codes in the 'Cost' field.</p>
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="bg-gray-100 dark:bg-gray-800">
-                        <th class="p-2">Code (Key)</th>
-                        <th class="p-2">Icon</th>
-                        <th class="p-2">Type</th>
-                    </tr>
-                </thead>
-                <tbody id="energy-modal-table">
-                    </tbody>
-            </table>
-        </div>
-    </div>
-
     <script>
-        // --- API Key (Leave as is) ---
-        const apiKey = ""; // This will be auto-filled by the environment
-
         // --- Global State ---
         let uploadedImageUrl = null;
         let attackCounter = 0;
 
-        // --- Element References (Global for helper functions) ---
+        // --- Element References (filled on DOMContentLoaded) ---
         let inputs, outputs, buttons, imageControls;
 
-        // --- Energy Maps ---
-        const energyIconMap = {
-            'C': '⚪', // Colorless
-            'F': '🔥', // Fire
-            'W': '💧', // Water
-            'G': '🌿', // Grass
-            'L': '⚡', // Electric
-            'P': '🔮', // Psychic
-            'H': '✊', // Fighting
-            'D': '🌙', // Darkness
-            'M': '⚙️', // Metal
-            'Y': '✨', // Fairy
-            'N': '🐉', // Dragon
-            // NEW KEYS
-            'O': '👑', // God (Olympos)
-            'T': '⌛', // Time
-            'S': '🌌', // Space
-            'A': '🚫', // Anti God Magic
-            'Z': '💀', // Necromancy (Zombie)
-            'I': '❄️', // Cold (Ice)
-            'V': '☣️', // Poison (Venom)
-            'X': '☠️', // Death
-            'E': '💖', // Life (Eros/Heart)
-            'K': '🌟', // Holy (Kadosh)
-            'U': '🌀', // Illusion (Unreal)
-            'B': '🤖', // Machine (Bot)
-        };
-        
-        const energyTypeMap = {
-            'none': { name: 'None', icon: '', class: 'type-none' }, // NEW
-            'colorless': { name: 'Colorless', icon: '⚪', class: 'type-colorless' },
-            'fire': { name: 'Fire', icon: '🔥', class: 'type-fire' },
-            'water': { name: 'Water', icon: '💧', class: 'type-water' },
-            'grass': { name: 'Grass', icon: '🌿', class: 'type-grass' },
-            'electric': { name: 'Electric', icon: '⚡', class: 'type-electric' },
-            'psychic': { name: 'Psychic', icon: '🔮', class: 'type-psychic' },
-            'fighting': { name: 'Fighting', icon: '✊', class: 'type-fighting' },
-            'darkness': { name: 'Darkness', icon: '🌙', class: 'type-darkness' },
-            'metal': { name: 'Metal', icon: '⚙️', class: 'type-metal' },
-            'fairy': { name: 'Fairy', icon: '✨', class: 'type-fairy' },
-            'dragon': { name: 'Dragon', icon: '🐉', class: 'type-dragon' },
-            // NEW TYPES
-            'god': { name: 'God', icon: '👑', class: 'type-god' },
-            'time': { name: 'Time', icon: '⌛', class: 'type-time' },
-            'space': { name: 'Space', icon: '🌌', class: 'type-space' },
-            'anti-god-magic': { name: 'Anti God Magic', icon: '🚫', class: 'type-anti-god-magic' },
-            'necromancy': { name: 'Necromancy', icon: '💀', class: 'type-necromancy' },
-            'cold': { name: 'Cold', icon: '❄️', class: 'type-cold' },
-            'poison': { name: 'Poison', icon: '☣️', class: 'type-poison' },
-            'death': { name: 'Death', icon: '☠️', class: 'type-death' },
-            'life': { name: 'Life', icon: '💖', class: 'type-life' },
-            'holy': { name: 'Holy', icon: '🌟', class: 'type-holy' },
-            'illusion': { name: 'Illusion', icon: '🌀', class: 'type-illusion' },
-            'machine': { name: 'Machine', icon: '🤖', class: 'type-machine' },
-        };
-
-        // --- Utility Functions ---
+        // --- Card Download Functions ---
 
         /**
-         * Parses a cost string (e.g., "PPC") and returns energy icons.
-         * @param {string} costString The input string (e.g., "FFC").
-         * @returns {string} The HTML string of icons.
+         * Downloads the card preview as a standard, high-resolution PNG.
          */
-        function parseEnergyCost(costString) {
-            if (!costString) return '';
-            return costString.toUpperCase().split('').map(char => energyIconMap[char] || char).join('');
-        }
-        
-        /* Fuction fetchWithBackoff removed as it's no longer used */
-
-
-        // --- Image Generation Function ---
-        /* Function generateCardImage removed */
-        
-        // --- Download Card Function (Standard) ---
         function downloadCard() {
             const cardElement = document.getElementById('card-preview');
             const downloadBtn = document.getElementById('download-btn');
@@ -773,7 +617,8 @@
 
             html2canvas(cardElement, {
                 useCORS: true, 
-                scale: 2 // High-res for web
+                scale: 2, // High-res for web
+                backgroundColor: null 
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.href = canvas.toDataURL('image/png');
@@ -790,24 +635,36 @@
             });
         }
 
-        // --- NEW: Download Card for Print (BLEED) ---
         /**
-         * Creates a special 822x1122px PNG with a 36px bleed
-         * based on the PDF specifications for a "Poker" card.
-         * This version composites a scaled UI layer and a full-bleed art layer.
+         * Downloads a 822x1122 print-ready file with a 36px bleed.
+         * This version clips the card's border and uses the border color as the bleed.
          */
-async function downloadCardForPrint() {
+        async function downloadCardForPrint() {
             const cardElement = document.getElementById('card-preview');
             const printBtn = document.getElementById('download-print-btn');
     
-               printBtn.disabled = true;
-               printBtn.textContent = 'Preparing Print File...';
+            printBtn.disabled = true;
+            printBtn.textContent = 'Preparing Print File...';
 
-            // --- START FIX ---
-            // Save original border style and hide it for the render
-            const originalBorder = cardElement.style.border;
-            cardElement.style.border = 'none';
-            // --- END FIX ---
+            // 1. Get the computed dimensions of the original element
+            const computedStyle = window.getComputedStyle(cardElement);
+            
+            // 2. Clone the node
+            const cardClone = cardElement.cloneNode(true);
+            cardClone.id = 'card-preview-clone';
+            
+            // 3. Style the clone to be off-screen and force its dimensions
+            cardClone.style.position = 'absolute';
+            cardClone.style.top = '-9999px';
+            cardClone.style.left = '0px';
+            cardClone.style.width = computedStyle.width;
+            cardClone.style.height = computedStyle.height;
+            
+            // 4. Change the clone's border to transparent (to prevent grey edges on render)
+            cardClone.style.borderColor = 'transparent';
+            
+            // 5. Append clone to the body so html2canvas can see it
+            document.body.appendChild(cardClone);
 
             try {
                 // 1. Create the final 822x1122 print canvas
@@ -822,18 +679,27 @@ async function downloadCardForPrint() {
                 ctx.fillStyle = borderColor;
                 ctx.fillRect(0, 0, 822, 1122);
                 
-                // 3. Render the card preview (now borderless)
-                const cardCanvas = await html2canvas(cardElement, {
-                useCORS: true,
-                scale: 2,
-                backgroundColor: null // Transparent background
+                // 3. Render the modified clone (with its transparent border)
+                const cardCanvas = await html2canvas(cardClone, {
+                    useCORS: true,
+                    scale: 2, // Render at 2x
+                    backgroundColor: null // Transparent background
                 });
 
-                // 4. Composite the card on top, inside the 36px bleed area
-                // Target size is 750x1050 (822-36-36) x (1122-36-36)
-                ctx.drawImage(cardCanvas, 36, 36, 750, 1050);
+                // 4. Composite the card on top, but clip the original border
+                const borderPx = 12 * 2; // 12px border at 2x scale = 24px
+                
+                const sx = borderPx; // Source X (skip left border)
+                const sy = borderPx; // Source Y (skip top border)
+                const sWidth = cardCanvas.width - (borderPx * 2);  // Source Width (clip left/right borders)
+                const sHeight = cardCanvas.height - (borderPx * 2); // Source Height (clip top/bottom borders)
 
-                // 5. Download the final composited image
+                // 5. Draw the *clipped* source onto the destination canvas
+                ctx.drawImage(cardCanvas, 
+                    sx, sy, sWidth, sHeight,  // Source rect (clipping)
+                    36, 36, 750, 1050);       // Destination rect (standard print size inside 36px bleed)
+
+                // 6. Download the final composited image
                 const link = document.createElement('a');
                 link.href = printCanvas.toDataURL('image/png');
                 link.download = 'my-card-PRINT-READY-822x1122.png';
@@ -845,27 +711,23 @@ async function downloadCardForPrint() {
             } catch (err) {
                 console.error("Failed to download print-ready card:", err);
             } finally {
-                // 8. Clean up
-                // --- START FIX ---
-                // Restore the original border to the UI element
-                cardElement.style.border = originalBorder;
-                // --- END FIX ---
-
+                // 7. Clean up
+                document.body.removeChild(cardClone);
                 printBtn.disabled = false;
                 printBtn.textContent = 'Download for Print (Bleed)';
             }
         }
         
-        // --- NEW: Download Card for Print (WITH BORDER) ---
+        /**
+         * Downloads a 822x1122 print-ready file *with* the card's border visible.
+         * The border color is still used as the 36px bleed around the card.
+         */
         async function downloadCardForPrintWithBorder() {
             const cardElement = document.getElementById('card-preview');
-            // Get the new button
             const printBtn = document.getElementById('download-print-with-border-btn');
     
             printBtn.disabled = true;
             printBtn.textContent = 'Preparing Print File...';
-
-            // NO BORDER HIDING
 
             try {
                 // 1. Create the final 822x1122 print canvas
@@ -876,26 +738,24 @@ async function downloadCardForPrint() {
                 ctx.imageSmoothingQuality = 'high';
 
                 // 2. Fill the ENTIRE canvas with the border color for the bleed
-                // This is still good practice, as it creates the bleed *around* our card.
                 const borderColor = document.getElementById('input-border-color').value || '#000000';
                 ctx.fillStyle = borderColor;
                 ctx.fillRect(0, 0, 822, 1122);
                 
-                // 3. Render the card preview (NOW *WITH* BORDER)
+                // 3. Render the original card preview (as-is, with border)
                 const cardCanvas = await html2canvas(cardElement, {
                     useCORS: true,
                     scale: 2,
-                    backgroundColor: null // Transparent background
+                    backgroundColor: null
                 });
 
                 // 4. Composite the card on top, inside the 36px bleed area
-                // Target size is 750x1050
                 ctx.drawImage(cardCanvas, 36, 36, 750, 1050);
 
                 // 5. Download the final composited image
                 const link = document.createElement('a');
                 link.href = printCanvas.toDataURL('image/png');
-                link.download = 'my-card-PRINT-WITH-BORDER-822x1122.png'; // New filename
+                link.download = 'my-card-PRINT-WITH-BORDER-822x1122.png';
                 
                 document.body.appendChild(link);
                 link.click();
@@ -904,15 +764,13 @@ async function downloadCardForPrint() {
             } catch (err) {
                 console.error("Failed to download print-ready card (with border):", err);
             } finally {
-                // NO BORDER RESTORING
-
                 printBtn.disabled = false;
-                printBtn.textContent = 'Download for Print (with Border)'; // Update text
+                printBtn.textContent = 'Download for Print (with Border)';
             }
         }
 
 
-        // --- START: Data Save/Load Functions ---
+        // --- Data Import/Export & LocalStorage ---
 
         /**
          * Gathers all data from the form into a single object.
@@ -920,10 +778,10 @@ async function downloadCardForPrint() {
         function getCurrentCardData() {
             const inputs = {
                 creatureType: document.getElementById('input-creature-type').value,
+                cardTier: document.getElementById('input-card-tier').value,
                 cardName: document.getElementById('input-card-name').value,
                 cardHp: document.getElementById('input-card-hp').value,
                 cardAc: document.getElementById('input-card-ac').value,
-                cardType: document.getElementById('input-card-type').value,
                 borderColor: document.getElementById('input-border-color').value,
                 flavorText: document.getElementById('input-flavor-text').value,
                 illustrator: document.getElementById('input-illustrator').value,
@@ -931,7 +789,6 @@ async function downloadCardForPrint() {
                 vignetteToggle: document.getElementById('input-vignette-toggle').checked,
                 setName: document.getElementById('input-set-name').value,
                 cardNumber: document.getElementById('input-card-number').value,
-                /* imagePrompt removed */
             };
 
             const imageControls = {
@@ -943,13 +800,11 @@ async function downloadCardForPrint() {
 
             const attacks = [];
             document.querySelectorAll('#attack-forms-container .attack-form').forEach(form => {
-                const formInputs = form.querySelectorAll('input, textarea, select');
+                const formInputs = form.querySelectorAll('input, textarea');
                 attacks.push({
-                    type: formInputs[0].value,
-                    name: formInputs[1].value,
-                    cost: formInputs[2].value,
-                    desc: formInputs[3].value,
-                    damage: formInputs[4].value
+                    name: formInputs[0].value,
+                    desc: formInputs[1].value,
+                    damage: formInputs[2].value
                 });
             });
 
@@ -977,10 +832,10 @@ async function downloadCardForPrint() {
 
             // Load simple inputs
             document.getElementById('input-creature-type').value = data.creatureType || 'Robot';
+            document.getElementById('input-card-tier').value = data.cardTier || 'Common';
             document.getElementById('input-card-name').value = data.cardName || 'Gemini';
             document.getElementById('input-card-hp').value = data.cardHp ?? '';
             document.getElementById('input-card-ac').value = data.cardAc ?? '';
-            document.getElementById('input-card-type').value = data.cardType || 'none'; // Default to none
             document.getElementById('input-border-color').value = data.borderColor || '#f9d71c';
             document.getElementById('input-flavor-text').value = data.flavorText || '';
             document.getElementById('input-illustrator').value = data.illustrator || 'AI Generated';
@@ -988,7 +843,6 @@ async function downloadCardForPrint() {
             document.getElementById('input-vignette-toggle').checked = data.vignetteToggle || false;
             document.getElementById('input-set-name').value = data.setName || 'Set Name';
             document.getElementById('input-card-number').value = data.cardNumber || '1/100';
-            /* imagePrompt removed */
 
             // Load image
             const imageArea = document.getElementById('card-image-area');
@@ -1008,20 +862,18 @@ async function downloadCardForPrint() {
                 uploadedImageUrl = null;
             }
 
-
             // Load attacks
             document.getElementById('attack-forms-container').innerHTML = ''; // Clear existing
             if (data.attacks && data.attacks.length > 0) {
                 data.attacks.forEach(attackData => createAttackForm(attackData));
             }
 
-            // --- Trigger all update functions to sync preview ---
-            // This is critical
+            // Trigger all update functions to sync preview
             document.getElementById('input-creature-type').dispatchEvent(new Event('input'));
+            document.getElementById('input-card-tier').dispatchEvent(new Event('change'));
             document.getElementById('input-card-name').dispatchEvent(new Event('input'));
             document.getElementById('input-card-hp').dispatchEvent(new Event('input'));
             document.getElementById('input-card-ac').dispatchEvent(new Event('input'));
-            document.getElementById('input-card-type').dispatchEvent(new Event('change'));
             document.getElementById('input-border-color').dispatchEvent(new Event('input'));
             document.getElementById('input-flavor-text').dispatchEvent(new Event('input'));
             document.getElementById('input-illustrator').dispatchEvent(new Event('input'));
@@ -1030,11 +882,9 @@ async function downloadCardForPrint() {
             document.getElementById('input-set-name').dispatchEvent(new Event('input'));
             document.getElementById('input-card-number').dispatchEvent(new Event('input'));
             
-            // FIX: This function is defined *later* in the DOMContentLoaded event,
-            // but it needs to be accessible *here*.
-            // We moved it outside the DOMContentLoaded listener.
-            updateImageTransform(); // Update zoom/pos
-            updateCardAttacks(); // Update attacks
+            updateImageTransform();
+            updateCardAttacks();
+            updateCardTier();
         }
 
         /**
@@ -1102,19 +952,14 @@ async function downloadCardForPrint() {
                     saveDataToLocalStorage(); // Save imported data
                 } catch (error) {
                     console.error("Failed to import card data:", error);
-                    // You could show a user-facing error message here
                 }
             };
             reader.readAsText(file);
             
-            // Clear the file input so the same file can be re-uploaded
             event.target.value = null;
         }
 
-        // --- END: Data Save/Load Functions ---
-
-
-        // --- Dynamic Attack Functions ---
+        // --- Dynamic Attack Form Management ---
 
         /**
          * Creates a new attack form and adds it to the DOM.
@@ -1124,8 +969,6 @@ async function downloadCardForPrint() {
             const id = attackCounter;
             
             const {
-                type = 'attack',
-                cost = 'CC',
                 name = 'New Attack',
                 desc = 'Attack description.',
                 damage = '10'
@@ -1139,22 +982,9 @@ async function downloadCardForPrint() {
             attackForm.innerHTML = `
                 <button type="button" class="delete-attack-btn absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold">&times;</button>
                 
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
-                        <select class="attack-type-select mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
-                            <option value="attack" ${type === 'attack' ? 'selected' : ''}>Attack</option>
-                            <option value="ability" ${type === 'ability' ? 'selected' : ''}>Ability</option>
-                        </select>
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
-                        <input type="text" value="${name}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
-                    </div>
-                </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cost (e.g., CC)</label>
-                    <input type="text" value="${cost}" class="attack-cost-input mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+                    <input type="text" value="${name}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
@@ -1172,110 +1002,73 @@ async function downloadCardForPrint() {
             attackForm.querySelector('.delete-attack-btn').addEventListener('click', () => {
                 attackForm.remove();
                 updateCardAttacks();
-                saveDataToLocalStorage(); // Save change
-            });
-            
-            const typeSelect = attackForm.querySelector('.attack-type-select');
-            const damageField = attackForm.querySelector('.attack-damage-field');
-            const costInput = attackForm.querySelector('.attack-cost-input');
-
-            // Toggle fields based on type
-            const toggleType = () => {
-                if (typeSelect.value === 'ability') {
-                    damageField.style.display = 'none';
-                    costInput.style.display = 'none'; // Abilities often have no cost
-                } else {
-                    damageField.style.display = 'block';
-                    costInput.style.display = 'block';
-                }
-            };
-            typeSelect.addEventListener('change', () => {
-                toggleType();
-                updateCardAttacks();
-                saveDataToLocalStorage(); // Save change
+                saveDataToLocalStorage();
             });
             
             // Add listeners to all inputs to update preview
-            attackForm.querySelectorAll('input, textarea, select').forEach(el => {
+            attackForm.querySelectorAll('input, textarea').forEach(el => {
                 el.addEventListener('input', () => {
                     updateCardAttacks();
-                    saveDataToLocalStorage(); // Save change
+                    saveDataToLocalStorage();
                 });
             });
-
-            toggleType(); // Initial check
         }
+
+
+        // --- Card Preview Update Functions ---
 
         /**
          * Reads all attack forms and updates the card preview.
-         * THIS FUNCTION IS UPDATED FOR ALIGNMENT.
          */
         function updateCardAttacks() {
             const forms = document.querySelectorAll('#attack-forms-container .attack-form');
             const outputContainer = document.getElementById('card-attacks-output');
-            if (!outputContainer) return; // Safety check
+            if (!outputContainer) return;
             outputContainer.innerHTML = '';
 
             forms.forEach((form, index) => {
-                const inputs = form.querySelectorAll('input, textarea, select');
-                const type = inputs[0].value;
-                const name = inputs[1].value;
-                const cost = inputs[2].value;
-                const desc = inputs[3].value;
-                const damage = inputs[4].value;
+                const inputs = form.querySelectorAll('input, textarea');
+                const name = inputs[0].value;
+                const desc = inputs[1].value;
+                const damage = inputs[2].value;
+
+                // --- MODIFICATION: REMOVED DIVIDER ---
+                // The divider element has been completely removed.
+                // --- END MODIFICATION ---
 
                 const attackEl = document.createElement('div');
                 attackEl.className = 'attack';
 
-                // We build the HTML differently now
-                if (type === 'attack') {
-                    const costHTML = parseEnergyCost(cost);
-                    // Only add the cost div if there is a cost
-                    attackEl.innerHTML = `
-                        <div class="attack-layout">
-                            ${costHTML ? `<div class="attack-cost">${costHTML}</div>` : ''}
-                            <div class="attack-details"> 
-                                <div class="attack-header">
-                                    <span class="attack-name">${name}</span>
-                                    <span class="attack-damage">${damage}</span>
-                                </div>
-                                <p class="attack-description">
-                                    ${desc.replace(/\n/g, '<br>')}
-                                </p>
-                            </div>
-                        </div>
-                    `;
-                } else { // Ability
-                    // Abilities render directly, no layout wrapper
-                    attackEl.innerHTML = `
-                        <div class="attack-details">
+                // --- NEW MODIFICATION: Add space between attacks ---
+                if (index > 0) {
+                    // Add a clean 8px space above attacks (but not the first one)
+                    attackEl.style.marginTop = '8px'; 
+                }
+                // --- END NEW MODIFICATION ---
+
+                attackEl.innerHTML = `
+                    <div class="attack-layout">
+                        <div class="attack-details"> 
                             <div class="attack-header">
-                                <div class="flex items-center">
-                                    <span class="ability-badge">Ability</span>
-                                    <span class="attack-name">${name}</span>
-                                </div>
+                                <span class="attack-name">${name}</span>
+                                <span class="attack-damage">${damage}</span>
                             </div>
                             <p class="attack-description">
                                 ${desc.replace(/\n/g, '<br>')}
                             </p>
                         </div>
-                    `;
-                }
+                    </div>
+                `;
                 
-                outputContainer.appendChild(attackEl);
-
-                // Add divider if not the last attack
-                if (index < forms.length - 1) {
-                    const hr = document.createElement('hr');
-                    hr.className = 'attack-divider';
-                    outputContainer.appendChild(hr);
-                }
+                outputContainer.appendChild(attackEl); // Append the attack
             });
         }
-
-        // --- Image Transform Function (Moved to global scope) ---
+        
+        /**
+         * Updates the card image's zoom and position.
+         */
         function updateImageTransform() {
-            if (!inputs.imageZoom || !inputs.imagePosX || !inputs.imagePosY || !outputs.imageArea || !outputs.zoomValue || !outputs.posXValue || !outputs.posYValue) return; // <-- ADDED SAFETY CHECK
+            if (!inputs.imageZoom || !inputs.imagePosX || !inputs.imagePosY || !outputs.imageArea || !outputs.zoomValue || !outputs.posXValue || !outputs.posYValue) return;
             const zoom = inputs.imageZoom.value;
             const posX = inputs.imagePosX.value;
             const posY = inputs.imagePosY.value;
@@ -1283,22 +1076,43 @@ async function downloadCardForPrint() {
             outputs.imageArea.style.backgroundSize = `${zoom}%`;
             outputs.imageArea.style.backgroundPosition = `${posX}% ${posY}%`;
             
-            // Update slider value displays
             outputs.zoomValue.textContent = zoom;
             outputs.posXValue.textContent = posX;
             outputs.posYValue.textContent = posY;
         }
+
+        /**
+         * Updates the card's creature type color based on the selected tier.
+         */
+        function updateCardTier() {
+            const inputCardTier = document.getElementById('input-card-tier');
+            const creatureTypeOutput = document.getElementById('card-creature-type');
+
+            if (!inputCardTier || !creatureTypeOutput) return;
+            const tier = inputCardTier.value.toLowerCase();
+            
+            // Remove all existing tier classes
+            creatureTypeOutput.classList.remove(
+                'tier-common', 'tier-uncommon', 'tier-rare', 'tier-masterwork',
+                'tier-epic', 'tier-legendary', 'tier-exotic', 'tier-mythic', 'tier-unique'
+            );
+
+            // Add the new class
+            if (tier) {
+                creatureTypeOutput.classList.add(`tier-${tier}`);
+            }
+        }
         
-        // --- Main Event Listeners ---
+        // --- Main Initialization (DOMContentLoaded) ---
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- Get Elements ---
+            // --- 1. Get Element References ---
             inputs = {
                 creatureType: document.getElementById('input-creature-type'), 
+                inputCardTier: document.getElementById('input-card-tier'),
                 cardName: document.getElementById('input-card-name'),
                 cardHp: document.getElementById('input-card-hp'),
                 cardAc: document.getElementById('input-card-ac'),
-                cardType: document.getElementById('input-card-type'),
                 borderColor: document.getElementById('input-border-color'),
                 imageUpload: document.getElementById('input-image-upload'),
                 flavorText: document.getElementById('input-flavor-text'),
@@ -1307,7 +1121,6 @@ async function downloadCardForPrint() {
                 vignetteToggle: document.getElementById('input-vignette-toggle'), 
                 setName: document.getElementById('input-set-name'), 
                 cardNumber: document.getElementById('input-card-number'), 
-                // Image controls
                 imageZoom: document.getElementById('image-zoom'),
                 imagePosX: document.getElementById('image-pos-x'),
                 imagePosY: document.getElementById('image-pos-y'),
@@ -1318,10 +1131,9 @@ async function downloadCardForPrint() {
                 creatureType: document.getElementById('card-creature-type'), 
                 cardName: document.getElementById('card-name'),
                 cardHp: document.getElementById('card-hp'),
-                cardHpContainer: document.getElementById('card-hp-container'), // ADDED
+                cardHpContainer: document.getElementById('card-hp-container'),
                 cardAc: document.getElementById('card-ac'),
-                cardAcContainer: document.getElementById('card-ac-container'), // ADDED
-                cardEnergyIcon: document.getElementById('card-energy-icon'),
+                cardAcContainer: document.getElementById('card-ac-container'),
                 imageArea: document.getElementById('card-image-area'),
                 flavorText: document.getElementById('card-flavor-text'),
                 attacks: document.getElementById('card-attacks-output'),
@@ -1331,32 +1143,32 @@ async function downloadCardForPrint() {
                 cardVignetteOverlay: document.getElementById('card-vignette-overlay'), 
                 setName: document.getElementById('card-set-name'), 
                 cardNumber: document.getElementById('card-number'), 
-                // Image control value displays
                 zoomValue: document.getElementById('zoom-value'),
                 posXValue: document.getElementById('pos-x-value'),
                 posYValue: document.getElementById('pos-y-value'),
             };
 
             buttons = {
-                /* generateImage removed */
                 downloadCard: document.getElementById('download-btn'),
-                downloadPrint: document.getElementById('download-print-btn'), // NEW
-                downloadPrintWithBorder: document.getElementById('download-print-with-border-btn'), // NEW
+                downloadPrint: document.getElementById('download-print-btn'),
+                downloadPrintWithBorder: document.getElementById('download-print-with-border-btn'),
                 clearUpload: document.getElementById('clear-upload-btn'),
                 addAttack: document.getElementById('add-attack-btn'),
-                viewEnergy: document.getElementById('view-energy-btn'),
-                closeModal: document.getElementById('close-modal-btn'),
                 resetImage: document.getElementById('reset-image-btn'),
-                darkModeToggle: document.getElementById('dark-mode-toggle'), // NEW
-                exportData: document.getElementById('export-data-btn'), // NEW
-                importData: document.getElementById('import-data-btn') // NEW
+                darkModeToggle: document.getElementById('dark-mode-toggle'),
+                exportData: document.getElementById('export-data-btn'),
+                importData: document.getElementById('import-data-btn')
             };
             
             imageControls = document.getElementById('image-controls');
 
-            // --- Helper to bind text content ---
+            // --- 2. Define Helper Functions ---
+            
+            /**
+             * Binds an input element's value to an output element's text content.
+             */
             function bindText(inputEl, outputEl, parserFn = null) {
-                if (!inputEl || !outputEl) { // <-- ADDED SAFETY CHECK
+                if (!inputEl || !outputEl) {
                     console.warn("bindText: Missing input or output element.", inputEl, outputEl);
                     return;
                 }
@@ -1369,18 +1181,19 @@ async function downloadCardForPrint() {
                 update(); // Initial sync
             }
             
-            // --- Bind Simple Text Fields ---
+            // --- 3. Bind UI Elements ---
+            
+            // Bind Simple Text Fields
             bindText(inputs.creatureType, outputs.creatureType); 
             bindText(inputs.cardName, outputs.cardName);
-            // REMOVED bindText for HP and AC
             bindText(inputs.flavorText, outputs.flavorText);
             bindText(inputs.illustrator, outputs.illustrator);
             bindText(inputs.setName, outputs.setName); 
             bindText(inputs.cardNumber, outputs.cardNumber); 
             
-            // --- Bind HP and AC with visibility toggle ---
+            // Bind HP and AC with visibility toggle
             const updateHp = () => {
-                if (!inputs.cardHp || !outputs.cardHp || !outputs.cardHpContainer) return; // <-- ADDED SAFETY CHECK
+                if (!inputs.cardHp || !outputs.cardHp || !outputs.cardHpContainer) return;
                 const value = inputs.cardHp.value;
                 outputs.cardHp.textContent = value;
                 outputs.cardHpContainer.style.display = value ? 'flex' : 'none';
@@ -1389,7 +1202,7 @@ async function downloadCardForPrint() {
             updateHp(); // Initial sync
 
             const updateAc = () => {
-                if (!inputs.cardAc || !outputs.cardAc || !outputs.cardAcContainer) return; // <-- ADDED SAFETY CHECK
+                if (!inputs.cardAc || !outputs.cardAc || !outputs.cardAcContainer) return;
                 const value = inputs.cardAc.value;
                 outputs.cardAc.textContent = value;
                 outputs.cardAcContainer.style.display = value ? 'flex' : 'none';
@@ -1397,49 +1210,33 @@ async function downloadCardForPrint() {
             if(inputs.cardAc) inputs.cardAc.addEventListener('input', updateAc);
             updateAc(); // Initial sync
             
-            // --- Bind Card Type ---
-            if (inputs.cardType) { // <-- ADDED SAFETY CHECK
-                inputs.cardType.addEventListener('change', () => {
-                    const type = inputs.cardType.value;
-                    const typeData = energyTypeMap[type] || energyTypeMap['none'];
-                    if (outputs.cardEnergyIcon) {
-                        outputs.cardEnergyIcon.textContent = typeData.icon;
-                        // NEW: Hide icon if it's the 'none' type
-                        outputs.cardEnergyIcon.style.display = (type === 'none' || !typeData.icon) ? 'none' : 'inline';
-                    }
-                    Object.values(energyTypeMap).forEach(data => {
-                        if (outputs.card) outputs.card.classList.remove(data.class);
-                    });
-                    if (outputs.card) outputs.card.classList.add(typeData.class);
-                });
-                inputs.cardType.dispatchEvent(new Event('change'));
-            }
-
-            // --- Bind Border Color ---
-            if (inputs.borderColor && outputs.card) { // <-- ADDED SAFETY CHECK
+            // Bind Border Color
+            if (inputs.borderColor && outputs.card) {
                 inputs.borderColor.addEventListener('input', () => {
                     outputs.card.style.borderColor = inputs.borderColor.value;
                 });
                 inputs.borderColor.dispatchEvent(new Event('input')); // Initial sync
             }
 
-            // --- Bind Overlay Color ---
+            // Bind Overlay Color
             function hexToRgba(hex, alpha) {
+                if (!hex || hex.length < 7) hex = '#000000'; // Fallback for invalid hex
                 const r = parseInt(hex.slice(1, 3), 16);
                 const g = parseInt(hex.slice(3, 5), 16);
                 const b = parseInt(hex.slice(5, 7), 16);
-                // FIX: Use 0.01 instead of 0 for transparent end
-                const a = alpha === 0 ? 0.01 : alpha;
+                const a = alpha === 0 ? 0.01 : alpha; // Use 0.01 for transparent end
                 return `rgba(${r}, ${g}, ${b}, ${a})`;
             }
 
-            if (inputs.overlayColor) { // <-- ADDED SAFETY CHECK
+            if (inputs.overlayColor) {
                 inputs.overlayColor.addEventListener('input', () => {
                     const color = inputs.overlayColor.value;
-                    // FIX: Updated gradient for full-height overlay
                     if (outputs.cardTopOverlay) outputs.cardTopOverlay.style.background = `linear-gradient(to bottom, ${hexToRgba(color, 0.8)} 0%, ${hexToRgba(color, 0.01)} 25%)`;
                     
-                    // Updated: Rectangular vignette using overlay color
+                    // Update bottom overlay color as well
+                    const bottomOverlay = document.getElementById('card-bottom-overlay');
+                    if (bottomOverlay) bottomOverlay.style.background = `linear-gradient(to top, ${hexToRgba(color, 0.85)} 0%, ${hexToRgba(color, 0.6)} 30%, ${hexToRgba(color, 0.01)} 60%)`;
+
                     if (outputs.cardVignetteOverlay) outputs.cardVignetteOverlay.style.background = `
                         linear-gradient(to bottom, 
                             ${hexToRgba(color, 0.7)} 0%, 
@@ -1460,21 +1257,32 @@ async function downloadCardForPrint() {
                 inputs.overlayColor.dispatchEvent(new Event('input')); // Initial sync
             }
 
-            // --- Bind Vignette Toggle ---
-            if (inputs.vignetteToggle) { // <-- ADDED SAFETY CHECK
+            // Bind Vignette Toggle
+            if (inputs.vignetteToggle) {
                 inputs.vignetteToggle.addEventListener('change', () => {
+                    const bottomOverlay = document.getElementById('card-bottom-overlay');
                     if (inputs.vignetteToggle.checked) {
                         if (outputs.cardVignetteOverlay) outputs.cardVignetteOverlay.style.display = 'block';
                         if (outputs.cardTopOverlay) outputs.cardTopOverlay.style.display = 'none';
+                        if (bottomOverlay) bottomOverlay.style.display = 'none'; // Hide new bottom overlay if vignette is on
                     } else {
                         if (outputs.cardVignetteOverlay) outputs.cardVignetteOverlay.style.display = 'none';
                         if (outputs.cardTopOverlay) outputs.cardTopOverlay.style.display = 'block';
+                        if (bottomOverlay) bottomOverlay.style.display = 'block'; // Show new bottom overlay
                     }
                 });
                 inputs.vignetteToggle.dispatchEvent(new Event('change'));
             }
 
-            // --- Bind Image Controls ---
+            // Bind Tier Dropdown
+            if (inputs.inputCardTier) {
+                inputs.inputCardTier.addEventListener('change', () => {
+                    updateCardTier();
+                    saveDataToLocalStorage();
+                });
+            }
+
+            // Bind Image Controls
             if (inputs.imageZoom) inputs.imageZoom.addEventListener('input', updateImageTransform);
             if (inputs.imagePosX) inputs.imagePosX.addEventListener('input', updateImageTransform);
             if (inputs.imagePosY) inputs.imagePosY.addEventListener('input', updateImageTransform);
@@ -1484,10 +1292,10 @@ async function downloadCardForPrint() {
                 if (inputs.imagePosX) inputs.imagePosX.value = 50;
                 if (inputs.imagePosY) inputs.imagePosY.value = 50;
                 updateImageTransform();
-                saveDataToLocalStorage(); // Save change
+                saveDataToLocalStorage();
             });
 
-            // --- Bind Image Upload ---
+            // Bind Image Upload
             if (inputs.imageUpload) inputs.imageUpload.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
@@ -1498,7 +1306,7 @@ async function downloadCardForPrint() {
                         outputs.imageArea.style.backgroundImage = `url(${uploadedImageUrl})`;
                         imageControls.classList.remove('hidden');
                         buttons.resetImage.click(); // Reset controls to default
-                        saveDataToLocalStorage(); // Save change
+                        saveDataToLocalStorage();
                     };
                     reader.readAsDataURL(file);
                 }
@@ -1513,85 +1321,59 @@ async function downloadCardForPrint() {
                 }
                 if (imageControls) imageControls.classList.add('hidden');
                 if (buttons.resetImage) buttons.resetImage.click();
-                saveDataToLocalStorage(); // Save change
+                saveDataToLocalStorage();
             });
 
-            // --- Bind Buttons ---
-            /* generateImage listener removed */
+            // --- 4. Bind Button Listeners ---
             if (buttons.downloadCard) buttons.downloadCard.addEventListener('click', downloadCard);
-            if (buttons.downloadPrint) buttons.downloadPrint.addEventListener('click', downloadCardForPrint); // EXISTING
-            if (buttons.downloadPrintWithBorder) buttons.downloadPrintWithBorder.addEventListener('click', downloadCardForPrintWithBorder); // NEW
+            if (buttons.downloadPrint) buttons.downloadPrint.addEventListener('click', downloadCardForPrint);
+            if (buttons.downloadPrintWithBorder) buttons.downloadPrintWithBorder.addEventListener('click', downloadCardForPrintWithBorder);
             if (buttons.addAttack) buttons.addAttack.addEventListener('click', () => {
                 createAttackForm();
-                saveDataToLocalStorage(); // Save change
+                saveDataToLocalStorage();
             });
-            if (buttons.exportData) buttons.exportData.addEventListener('click', exportCardData); // NEW
-            if (buttons.importData) buttons.importData.addEventListener('change', importCardData); // NEW
+            if (buttons.exportData) buttons.exportData.addEventListener('click', exportCardData);
+            if (buttons.importData) buttons.importData.addEventListener('change', importCardData);
 
-            // --- Bind Dark Mode Toggle ---
+            // Bind Dark Mode Toggle
             if (buttons.darkModeToggle) buttons.darkModeToggle.addEventListener('change', () => {
                 document.documentElement.classList.toggle('dark');
-                saveDataToLocalStorage(); // Save change
+                saveDataToLocalStorage();
             });
 
-            // --- Energy Modal Logic ---
-            const energyModal = document.getElementById('energy-modal');
-            const modalTable = document.getElementById('energy-modal-table');
-            
-            // Populate modal table
-            let tableHTML = '';
-            for (const [key, icon] of Object.entries(energyIconMap)) {
-                const typeName = Object.values(energyTypeMap).find(t => t.icon === icon)?.name || 'N/A';
-                tableHTML += `<tr class="border-b dark:border-gray-700"><td class="p-2 font-mono font-bold">${key}</td><td class="p-2 text-2xl">${icon}</td><td class="p-2">${typeName}</td></tr>`;
-            }
-            if (modalTable) modalTable.innerHTML = tableHTML;
-
-            if (buttons.viewEnergy) buttons.viewEnergy.addEventListener('click', () => energyModal.classList.remove('hidden'));
-            if (buttons.closeModal) buttons.closeModal.addEventListener('click', () => energyModal.classList.add('hidden'));
-            if (energyModal) energyModal.addEventListener('click', (e) => {
-                if (e.target === energyModal) energyModal.classList.add('hidden');
-            });
-            
-            // --- Add Save Listeners to all inputs ---
+            // Add auto-save listeners to all form inputs
             Object.values(inputs).forEach(inputEl => {
-                if (inputEl) { // <-- ADDED SAFETY CHECK
+                if (inputEl) {
                     const eventType = (inputEl.type === 'range' || inputEl.type === 'color') ? 'input' : 'change';
                     inputEl.addEventListener(eventType, saveDataToLocalStorage);
                     inputEl.addEventListener('input', saveDataToLocalStorage); // Catch all text/number changes
                 }
             });
             
-            // --- Initial Setup ---
-            // Load data from localStorage *first*
+            // --- 5. Initial Page Setup ---
+            
+            // Load data from localStorage first
             const dataLoaded = loadDataFromLocalStorage();
 
-            // Add default attacks *only if* no data was loaded
+            // Add default attacks only if no data was loaded or attacks are empty
             if (!dataLoaded || (dataLoaded && getCurrentCardData().attacks.length === 0)) {
                 createAttackForm({
-                    type: 'attack',
-                    cost: 'CC',
                     name: 'Data Stream',
                     desc: 'Flip a coin. If heads, draw 3 cards.',
                     damage: '20'
                 });
-                createAttackForm({
-                    type: 'ability',
-                    cost: '',
-                    name: 'Synaptic Link',
-                    desc: 'Once during your turn, you may search your deck for a basic Energy card and attach it to 1 of your Pokémon.',
-                    damage: ''
-                });
             }
-            updateCardAttacks(); // Sync preview
+            updateCardAttacks();
+            updateCardTier();
             
-            // FIX: Set dark mode by default if no save data
+            // Default to dark mode if no save data exists
             if (!dataLoaded) {
                 document.documentElement.classList.add('dark');
                 if (buttons.darkModeToggle) buttons.darkModeToggle.checked = true;
-                saveDataToLocalStorage(); // Save this default state
+                saveDataToLocalStorage();
             }
             
-            // Set initial style (which is now always full-art)
+            // Set initial card style (always full-art)
             if(outputs.card) outputs.card.classList.add('full-art');
             if (outputs.wrrBar) {
                 outputs.wrrBar.style.display = 'none';
