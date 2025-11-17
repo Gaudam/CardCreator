@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" id="html-root"> <!-- Added ID for dark mode -->
-<head>
+<html lang="en" id="html-root"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Card Creator</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- FIX: Added Tailwind config to enable 'class' dark mode strategy -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -76,10 +74,11 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            background: #e0e0e0; /* Default colorless background */
+            /* This ensures any peek-through is black */
+            background: #000000; 
             position: relative; /* Needed for absolute positioning of full art image */
             justify-content: flex-end; /* PUSH ALL CONTENT TO THE BOTTOM */
-            padding-bottom: 30px; /* Reduced padding to move text down */
+            padding-bottom: 0px; /* Reduced padding to move text down */
         }
 
         /* Card Header */
@@ -99,11 +98,13 @@
         /* New element for the top gradient overlay */
         .card-top-overlay {
             position: absolute;
-            top: 0px; /* FIX: Moved up 1px to be clipped by overflow:hidden */
-            left: 0;
-            right: 0;
-            bottom: 0; /* FIX: Make element full height */
-            /* height: 90px; */ /* REMOVED */
+            top: -2px; /* FIX: Moved up 1px to be clipped by overflow:hidden */
+            left: -2px;
+            right: -2px;
+            /* === FINAL FIX === */
+            /* Increased bleed to -10px to guarantee overlap on render */
+            bottom: -10px; 
+            /* === END FIX === */
             background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.00) 25%); /* FIX: Gradient now fades over 25% of full height */
             z-index: 1; /* Below header content but above image */
             pointer-events: none; /* Allow clicks to pass through */
@@ -112,10 +113,13 @@
         /* New element for the vignette overlay */
         .card-vignette-overlay {
             position: absolute;
-            top: 0px; /* FIX: Moved up 1px to be clipped by overflow:hidden */
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: -2px; /* FIX: Moved up 1px to be clipped by overflow:hidden */
+            left: -2px;
+            right: -2px;
+            /* === FINAL FIX === */
+            /* Increased bleed to -10px to guarantee overlap on render */
+            bottom: -10px;
+            /* === END FIX === */
             /* Start with it hidden */
             display: none;
             /* Rectangular vignette, pushed to the borders */
@@ -169,12 +173,13 @@
         /* Card Image Area (for standard layout) */
         .card-image-area {
             position: absolute; /* Take over the entire card area */
-            top: 0px; /* FIX: Moved up 1px */
-            left: -1px; /* FIX: Moved left 1px */
-            right: -1px; /* FIX: Moved right 1px */
-            bottom: 0px; /* FIX: Moved bottom 1px */
-            /* width: 100%; */ /* REMOVED */
-            /* height: 100%; */ /* REMOVED */
+            top: -2px; /* FIX: Moved up 1px */
+            left: -2px; /* FIX: Moved left 1px */
+            right: -2px; /* FIX: Moved right 1px */
+            /* === FINAL FIX === */
+            /* Increased bleed to -10px to guarantee overlap on render */
+            bottom: -10px; 
+            /* === END FIX === */
             margin: 0; /* Remove margins */
             border: none; /* Remove borders */
             aspect-ratio: unset; /* Let height be controlled by card height */
@@ -185,7 +190,10 @@
             color: white;
             font-weight: 600;
             overflow: hidden;
-            background: #a0a0a0; /* Placeholder background */
+            /* === FINAL FIX === */
+            /* Changed placeholder from #a0a0a0 to #000000 */
+            background: #000000; 
+            /* === END FIX === */
             /* Image styling is now done with background-image */
             background-size: 100%;
             background-position: 50% 50%;
@@ -202,7 +210,7 @@
             background: none; 
             border-top: none;
             border-bottom: none; 
-            margin: 2px 14px 0 14px; /* Uses same L/R margin as footer */
+            margin: 2px 14px 30px 14px; /* Uses same L/R margin as footer */
             padding: 0; 
             position: relative; 
             z-index: 2;
@@ -406,11 +414,9 @@
 <body class="bg-gray-100 dark:bg-gray-900 p-4 md:p-8 transition-colors duration-200">
 
     <div class="max-w-7xl mx-auto">
-        <!-- HEADER: Fixed for mobile -->
         <div class="flex flex-col sm:flex-row justify-center sm:justify-between items-center mb-8 relative">
             <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-4 sm:mb-0">Custom Card Creator</h1>
             
-            <!-- Dark Mode Toggle -->
             <div class="flex items-center space-x-2">
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -431,15 +437,12 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             
-            <!-- FORM CONTROLS -->
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
                 <h2 class="text-2xl font-bold mb-4 text-gray-700 dark:text-gray-200">Card Details</h2>
                 <form id="card-form" class="space-y-4">
 
-                    <!-- Basic Info -->
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Basic Info</legend>
-                        <!-- FIX: Explicitly set grid-cols-2 for desktop, items are col-span-2 for mobile -->
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2 md:col-span-1">
                                 <label for="input-creature-type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Creature Type</label>
@@ -460,8 +463,7 @@
                             <div class="col-span-2 md:col-span-1">
                                 <label for="input-card-type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Energy Type</label>
                                 <select id="input-card-type" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    <option value="none" selected>None</option> <!-- NEW -->
-                                    <option value="colorless">Colorless</option>
+                                    <option value="none" selected>None</option> <option value="colorless">Colorless</option>
                                     <option value="fire">Fire</option>
                                     <option value="water">Water</option>
                                     <option value="grass">Grass</option>
@@ -515,7 +517,6 @@
                         </div>
                     </fieldset>
 
-                    <!-- Card Image -->
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Card Image</legend>
                         <div>
@@ -523,9 +524,6 @@
                             <input type="file" id="input-image-upload" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 dark:file:bg-indigo-900 file:text-indigo-700 dark:file:text-indigo-300 hover:file:bg-indigo-100 dark:hover:file:bg-indigo-800">
                             <button type="button" id="clear-upload-btn" class="mt-2 w-full text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">Clear Upload</button>
                         </div>
-                        <!-- Image Generation Removed -->
-                        
-                        <!-- NEW Image Controls -->
                         <div id="image-controls" class="mt-4 border-t dark:border-gray-600 pt-4 space-y-2 hidden">
                             <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Image Controls</h4>
                             <div>
@@ -545,7 +543,6 @@
                         </div>
                     </fieldset>
                     
-                    <!-- Flavor Text -->
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Flavor Text</legend>
                          <div>
@@ -553,18 +550,15 @@
                         </div>
                     </fieldset>
 
-                    <!-- Attacks & Abilities -->
                     <fieldset id="attacks-manager" class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Attacks & Abilities</legend>
                         <div id="attack-forms-container" class="space-y-4">
-                            <!-- Dynamic forms go here -->
-                        </div>
+                            </div>
                         <button type="button" id="add-attack-btn" class="mt-4 w-full inline-flex justify-center rounded-md border border-dashed border-gray-400 dark:border-gray-500 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
                             + Add Attack / Ability
                         </button>
                     </fieldset>
                     
-                    <!-- Illustrator -->
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Creator</legend>
                         <div class="mt-0">
@@ -573,11 +567,9 @@
                         </div>
                     </fieldset>
 
-                    <!-- NEW Import/Export -->
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Import/Export Card</legend>
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Save your card data as a .json file to edit later or on another device.</p>
-                        <!-- FIX: Stack buttons on mobile -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <button type="button" id="export-data-btn" class="w-full inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:ring-offset-gray-800">
                                 Export Data (.json)
@@ -591,11 +583,9 @@
                         </div>
                     </fieldset>
                     
-                    <!-- Download Buttons -->
                     <button type="button" id="download-btn" class="mt-4 w-full inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:ring-offset-gray-800">
                         Download Card (Web PNG)
                     </button>
-                    <!-- NEW PRINT BUTTON -->
                     <button type="button" id="download-print-btn" class="mt-2 w-full inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:ring-offset-gray-800">
                         Download for Print (Poker 822x1122px)
                     </button>
@@ -604,19 +594,14 @@
                 </form>
             </div>
 
-            <!-- CARD PREVIEW -->
             <div class="flex flex-col items-center">
                 <h2 class="text-2xl font-bold mb-4 text-gray-700 dark:text-gray-200 md:hidden">Card Preview</h2>
                 
-                <!-- The Card -->
                 <div id="card-preview" class="card type-colorless">
                     
-                    <!-- Top Gradient -->
                     <div id="card-top-overlay" class="card-top-overlay"></div>
-                    <!-- Vignette -->
                     <div id="card-vignette-overlay" class="card-vignette-overlay"></div>
                     
-                    <!-- Header (Creature Type, HP, AC, Energy Icon) -->
                     <div class="card-header">
                         <h3 id="card-creature-type" class="font-creature-type">Robot</h3>
                         <div class="flex items-center space-x-3">
@@ -632,34 +617,26 @@
                         </div>
                     </div>
                     
-                    <!-- Main Name Container -->
                     <div class="card-main-name-container">
                         <h2 id="card-name" class="font-card-title">Gemini</h2>
                     </div>
 
-                    <!-- Image Area -->
                     <div class="card-image-area" id="card-image-area">
                         <div class="text-center p-4">
                             Upload an image to create your card's art.
                         </div>
                     </div>
                     
-                    <!-- Attacks (at bottom) -->
                     <div class="card-attacks" id="card-attacks-output">
-                        <!-- Dynamic content -->
-                    </div>
+                        </div>
 
-                    <!-- Flavor Text (at bottom) -->
                     <div class="card-stats-bar">
                         <span id="card-flavor-text">It constantly processes information from across the web to answer any question.</span>
                     </div>
 
-                    <!-- WRR Bar (hidden) -->
                     <div id="card-wrr-bar" class="card-wrr-bar">
-                        <!-- Content removed -->
-                    </div>
+                        </div>
                     
-                    <!-- Footer (at bottom) -->
                     <div class="card-footer">
                         <div class="card-footer-item">
                             Creator: <span id="card-illustrator">AI Generated</span>
@@ -667,8 +644,7 @@
                         <div class="card-footer-item text-right">
                             <span id="card-set-name">Galactic Genesis</span>
                             <span id="card-number" class="ml-2">1/100</span> 
-                            <!-- Removed <br> -->
-                        </div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -676,7 +652,6 @@
         </div>
     </div>
 
-    <!-- Energy Modal -->
     <div id="energy-modal" class="modal hidden">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-4">
@@ -693,8 +668,7 @@
                     </tr>
                 </thead>
                 <tbody id="energy-modal-table">
-                    <!-- Populated by JS -->
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </div>
@@ -817,12 +791,18 @@
          * based on the PDF specifications for a "Poker" card.
          * This version composites a scaled UI layer and a full-bleed art layer.
          */
-        async function downloadCardForPrint() {
+async function downloadCardForPrint() {
             const cardElement = document.getElementById('card-preview');
             const printBtn = document.getElementById('download-print-btn');
-            
-            printBtn.disabled = true;
-            printBtn.textContent = 'Preparing Print File...';
+    
+               printBtn.disabled = true;
+               printBtn.textContent = 'Preparing Print File...';
+
+            // --- START FIX ---
+            // Save original border style and hide it for the render
+            const originalBorder = cardElement.style.border;
+            cardElement.style.border = 'none';
+            // --- END FIX ---
 
             try {
                 // 1. Create the final 822x1122 print canvas
@@ -837,17 +817,16 @@
                 ctx.fillStyle = borderColor;
                 ctx.fillRect(0, 0, 822, 1122);
                 
-                // 3. Render the card preview
-                // We render at 2x scale to get sharp text, then downscale
+                // 3. Render the card preview (now borderless)
                 const cardCanvas = await html2canvas(cardElement, {
-                    useCORS: true,
-                    scale: 2, 
-                    backgroundColor: null // Transparent background
+                useCORS: true,
+                scale: 2,
+                backgroundColor: null // Transparent background
                 });
 
                 // 4. Composite the card on top, inside the 36px bleed area
                 // Target size is 750x1050 (822-36-36) x (1122-36-36)
-                ctx.drawImage(cardCanvas, 36, 36, 750, 1050); 
+                ctx.drawImage(cardCanvas, 36, 36, 750, 1050);
 
                 // 5. Download the final composited image
                 const link = document.createElement('a');
@@ -862,10 +841,15 @@
                 console.error("Failed to download print-ready card:", err);
             } finally {
                 // 8. Clean up
+                // --- START FIX ---
+                // Restore the original border to the UI element
+                cardElement.style.border = originalBorder;
+                // --- END FIX ---
+
                 printBtn.disabled = false;
                 printBtn.textContent = 'Download for Print (Poker 822x1122px)';
             }
-        }
+           }
 
         // --- START: Data Save/Load Functions ---
 
@@ -1189,7 +1173,6 @@
                     attackEl.innerHTML = `
                         <div class="attack-layout">
                             ${costHTML ? `<div class="attack-cost">${costHTML}</div>` : ''}
-                            <!-- THIS LINE IS NOW FIXED -->
                             <div class="attack-details"> 
                                 <div class="attack-header">
                                     <span class="attack-name">${name}</span>
@@ -1555,5 +1538,3 @@
     </script>
 </body>
 </html>
-
-
