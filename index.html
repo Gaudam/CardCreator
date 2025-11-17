@@ -436,29 +436,29 @@
                     <!-- Basic Info -->
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Basic Info</legend>
-                        <!-- MODIFIED: Changed sm:grid-cols-2 to md:grid-cols-2 -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
+                        <!-- MODIFIED: Set grid to 2 columns, but control children spans -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- MODIFIED: All children are col-span-2 (full) on mobile, col-span-1 (half) on desktop -->
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="input-creature-type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Creature Type</label>
-                                <input type="text" id="input-creature-type" value="Robot" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <input type="text" id="input-creature-type" value="Robot" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
-                            <div>
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="input-card-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Card Name</label>
-                                <input type="text" id="input-card-name" value="Gemini" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <input type="text" id="input-card-name" value="Gemini" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
-                            <div>
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="input-card-hp" class="block text-sm font-medium text-gray-700 dark:text-gray-300">HP</label>
-                                <input type="number" id="input-card-hp" value="120" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <input type="number" id="input-card-hp" value="120" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
-                            <div>
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="input-card-ac" class="block text-sm font-medium text-gray-700 dark:text-gray-300">AC</label>
-                                <input type="number" id="input-card-ac" value="15" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <input type="number" id="input-card-ac" value="15" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
-                            <!-- MODIFIED: Changed sm:col-span-1 to md:col-span-1 -->
+                            
                             <div class="col-span-2 md:col-span-1">
                                 <label for="input-card-type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Energy Type</label>
-                                <select id="input-card-type" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    <option value="colorless" selected>Colorless</option>
+                                <select id="input-card-type" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                     <option value="fire">Fire</option>
                                     <option value="water">Water</option>
                                     <option value="grass">Grass</option>
@@ -483,32 +483,34 @@
                                     <option value="machine">Machine</option>
                                 </select>
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="input-border-color" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Border Color</label>
                                 <input type="color" id="input-border-color" value="#f9d71c" class="mt-1 block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm">
                             </div>
-                            <!-- MODIFIED: Changed sm:col-span-1 to md:col-span-1 -->
                             <div class="col-span-2 md:col-span-1">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Energy Legend</label>
                                 <button type="button" id="view-energy-btn" class="mt-1 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600">
                                     View Energy Types
                                 </button>
                             </div>
+                            <!-- MODIFIED: This item should be full width on both -->
                             <div class="col-span-2">
                                 <label for="input-overlay-color" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Overlay Color (for gradients)</label>
                                 <input type="color" id="input-overlay-color" value="#000000" class="mt-1 block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm">
                             </div>
+                            <!-- MODIFIED: This item should be full width on both -->
                             <div class="col-span-2 flex items-center">
                                 <input type="checkbox" id="input-vignette-toggle" class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500">
                                 <label for="input-vignette-toggle" class="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Apply Rectangular Vignette</label>
                             </div>
-                            <div class="col-span-1">
+                            <!-- MODIFIED: All children are col-span-2 (full) on mobile, col-span-1 (half) on desktop -->
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="input-set-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Set Name</label>
-                                <input type="text" id="input-set-name" value="Galactic Genesis" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <input type="text" id="input-set-name" value="Galactic Genesis" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="input-card-number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Card Number (e.g., 15/150)</label>
-                                <input type="text" id="input-card-number" value="1/100" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <input type="text" id="input-card-number" value="1/100" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
                         </div>
                     </fieldset>
@@ -575,12 +577,16 @@
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Import/Export Card</legend>
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Save your card data as a .json file to edit later or on another device.</p>
-                        <!-- MODIFIED: Changed sm:grid-cols-2 to md:grid-cols-2 -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <button type="button" id="export-data-btn" class="w-full inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:ring-offset-gray-800">
-                                Export Data (.json)
-                            </button>
-                            <div>
+                        <!-- MODIFIED: Set grid to 2 columns, but control children spans -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- MODIFIED: Button is full-width on mobile, half on desktop -->
+                            <div class="col-span-2 md:col-span-1">
+                                <button type="button" id="export-data-btn" class="w-full inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:ring-offset-gray-800">
+                                    Export Data (.json)
+                                </button>
+                            </div>
+                            <!-- MODIFIED: Button is full-width on mobile, half on desktop -->
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="import-data-btn" class="w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer">
                                     Import Data (.json)
                                 </label>
