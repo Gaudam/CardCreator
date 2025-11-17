@@ -798,19 +798,13 @@
             const cardElement = document.getElementById('card-preview');
             const downloadBtn = document.getElementById('download-btn');
             
-            // FIX: Get overlay elements
-            const topOverlay = document.getElementById('card-top-overlay');
-            const vignetteOverlay = document.getElementById('card-vignette-overlay');
+            // REMOVED: Get overlay elements
             
             downloadBtn.disabled = true;
             downloadBtn.textContent = 'Preparing...';
 
-            // FIX: Hide overlays before rendering to prevent visual artifacts
-            const topOverlayOriginalDisplay = topOverlay.style.display;
-            const vignetteOverlayOriginalDisplay = vignetteOverlay.style.display;
-            topOverlay.style.display = 'none';
-            vignetteOverlay.style.display = 'none';
-
+            // REMOVED: Hide overlays before rendering
+            
             try {
                 const canvas = await html2canvas(cardElement, {
                     useCORS: true, 
@@ -828,9 +822,7 @@
             } catch (err) {
                 console.error("Failed to download card:", err);
             } finally {
-                // FIX: Restore overlays
-                topOverlay.style.display = topOverlayOriginalDisplay;
-                vignetteOverlay.style.display = vignetteOverlayOriginalDisplay;
+                // REMOVED: Restore overlays
                 
                 downloadBtn.disabled = false;
                 downloadBtn.textContent = 'Download Card (Web PNG)';
@@ -847,18 +839,12 @@
             const cardElement = document.getElementById('card-preview');
             const printBtn = document.getElementById('download-print-btn');
             
-            // FIX: Get overlay elements
-            const topOverlay = document.getElementById('card-top-overlay');
-            const vignetteOverlay = document.getElementById('card-vignette-overlay');
+            // REMOVED: Get overlay elements
             
             printBtn.disabled = true;
             printBtn.textContent = 'Preparing Print File...';
 
-            // FIX: Hide overlays before rendering to prevent visual artifacts
-            const topOverlayOriginalDisplay = topOverlay.style.display;
-            const vignetteOverlayOriginalDisplay = vignetteOverlay.style.display;
-            topOverlay.style.display = 'none';
-            vignetteOverlay.style.display = 'none';
+            // REMOVED: Hide overlays before rendering
             
             try {
                 // 1. Render the UI layer (text, borders, overlays)
@@ -869,9 +855,7 @@
                     backgroundColor: null // Transparent background
                 });
 
-                // --- Restore preview card to normal ---
-                topOverlay.style.display = topOverlayOriginalDisplay;
-                vignetteOverlay.style.display = vignetteOverlayOriginalDisplay;
+                // REMOVED: Restore preview card to normal
 
                 // 2. Create the final 822x1122 print canvas
                 const printCanvas = document.createElement('canvas');
@@ -904,9 +888,7 @@
                 // 8. Clean up
                 printBtn.disabled = false;
                 printBtn.textContent = 'Download for Print (Poker 822x1122px)';
-                // Restore preview card just in case of error
-                topOverlay.style.display = topOverlayOriginalDisplay;
-                vignetteOverlay.style.display = vignetteOverlayOriginalDisplay;
+                // REMOVED: Restore preview card just in case of error
             }
         }
 
