@@ -436,7 +436,8 @@
                     <!-- Basic Info -->
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Basic Info</legend>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- MODIFIED: Changed sm:grid-cols-2 to md:grid-cols-2 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="input-creature-type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Creature Type</label>
                                 <input type="text" id="input-creature-type" value="Robot" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
@@ -572,8 +573,8 @@
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Import/Export Card</legend>
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Save your card data as a .json file to edit later or on another device.</p>
-                        <!-- MODIFIED: Stack buttons on mobile -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- MODIFIED: Changed sm:grid-cols-2 to md:grid-cols-2 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <button type="button" id="export-data-btn" class="w-full inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:ring-offset-gray-800">
                                 Export Data (.json)
                             </button>
