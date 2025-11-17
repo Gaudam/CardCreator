@@ -402,11 +402,13 @@
 <body class="bg-gray-100 dark:bg-gray-900 p-4 md:p-8 transition-colors duration-200">
 
     <div class="max-w-7xl mx-auto">
-        <div class="flex justify-center items-center mb-8 relative">
-            <h1 class="text-4xl font-bold text-center text-gray-800 dark:text-gray-100">Custom Card Creator</h1>
+        <!-- MODIFIED: Header layout for better mobile responsiveness -->
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
+            <h1 class="text-3xl sm:text-4xl font-bold text-center sm:text-left text-gray-800 dark:text-gray-100">Custom Card Creator</h1>
             
             <!-- Dark Mode Toggle -->
-            <div class="absolute right-0 top-0 flex items-center space-x-2">
+            <!-- MODIFIED: Removed absolute positioning, added responsive centering -->
+            <div class="flex items-center space-x-2 justify-center sm:justify-end">
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -570,7 +572,8 @@
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Import/Export Card</legend>
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Save your card data as a .json file to edit later or on another device.</p>
-                        <div class="grid grid-cols-2 gap-4">
+                        <!-- MODIFIED: Stack buttons on mobile -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <button type="button" id="export-data-btn" class="w-full inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:ring-offset-gray-800">
                                 Export Data (.json)
                             </button>
@@ -779,17 +782,30 @@
         /* Function generateCardImage removed */
         
         // --- Download Card Function (Standard) ---
-        function downloadCard() {
+        async function downloadCard() {
             const cardElement = document.getElementById('card-preview');
             const downloadBtn = document.getElementById('download-btn');
+            
+            // FIX: Get overlay elements
+            const topOverlay = document.getElementById('card-top-overlay');
+            const vignetteOverlay = document.getElementById('card-vignette-overlay');
             
             downloadBtn.disabled = true;
             downloadBtn.textContent = 'Preparing...';
 
-            html2canvas(cardElement, {
-                useCORS: true, 
-                scale: 2 // High-res for web
-            }).then(canvas => {
+            // FIX: Hide overlays before rendering to prevent visual artifacts
+            const topOverlayOriginalDisplay = topOverlay.style.display;
+            const vignetteOverlayOriginalDisplay = vignetteOverlay.style.display;
+            topOverlay.style.display = 'none';
+            vignetteOverlay.style.display = 'none';
+
+            try {
+                const canvas = await html2canvas(cardElement, {
+                    useCORS: true, 
+                    scale: 2, // High-res for web
+                    backgroundColor: null // Ensure transparency is respected if card background is none
+                });
+
                 const link = document.createElement('a');
                 link.href = canvas.toDataURL('image/png');
                 link.download = 'my-custom-card.png';
@@ -797,12 +813,16 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-            }).catch(err => {
+            } catch (err) {
                 console.error("Failed to download card:", err);
-            }).finally(() => {
+            } finally {
+                // FIX: Restore overlays
+                topOverlay.style.display = topOverlayOriginalDisplay;
+                vignetteOverlay.style.display = vignetteOverlayOriginalDisplay;
+                
                 downloadBtn.disabled = false;
                 downloadBtn.textContent = 'Download Card (Web PNG)';
-            });
+            }
         }
 
         // --- NEW: Download Card for Print ---
@@ -813,33 +833,21 @@
          */
         async function downloadCardForPrint() {
             const cardElement = document.getElementById('card-preview');
-            const imageArea = document.getElementById('card-image-area');
             const printBtn = document.getElementById('download-print-btn');
+            
+            // FIX: Get overlay elements
+            const topOverlay = document.getElementById('card-top-overlay');
+            const vignetteOverlay = document.getElementById('card-vignette-overlay');
             
             printBtn.disabled = true;
             printBtn.textContent = 'Preparing Print File...';
 
-            // --- Capture styles ---
-            const imageStyles = window.getComputedStyle(imageArea);
-            const cardImageURL = imageStyles.backgroundImage.match(/url\("?(.+?)"?\)/)?.[1];
-            const cardImageSize = imageStyles.backgroundSize;
-            const cardImagePosition = imageStyles.backgroundPosition;
-
-            const cardStyles = window.getComputedStyle(cardElement);
-            const cardBG = cardStyles.background; // e.g., the 'type-time' gradient
-
-            // --- Temporarily modify preview card to capture UI-only layer ---
-            // FIX: Save and restore backgroundImage, not background
-            const originalImageBG = imageArea.style.backgroundImage;
-            const originalCardBG = cardElement.style.background;
-            const originalImageHTML = imageArea.innerHTML;
-            const originalImageBGColor = imageArea.style.backgroundColor; 
-
-            imageArea.style.backgroundImage = 'none';
-            imageArea.style.backgroundColor = 'transparent'; // Make placeholder transparent
-            imageArea.innerHTML = '';
-            cardElement.style.background = 'none'; // Hide card's own gradient
-
+            // FIX: Hide overlays before rendering to prevent visual artifacts
+            const topOverlayOriginalDisplay = topOverlay.style.display;
+            const vignetteOverlayOriginalDisplay = vignetteOverlay.style.display;
+            topOverlay.style.display = 'none';
+            vignetteOverlay.style.display = 'none';
+            
             try {
                 // 1. Render the UI layer (text, borders, overlays)
                 // We render at 2x scale to get sharp text, then downscale
@@ -850,11 +858,8 @@
                 });
 
                 // --- Restore preview card to normal ---
-                // FIX: Restore backgroundImage and backgroundColor
-                imageArea.style.backgroundImage = originalImageBG;
-                imageArea.style.backgroundColor = originalImageBGColor; 
-                cardElement.style.background = originalCardBG;
-                imageArea.innerHTML = originalImageHTML;
+                topOverlay.style.display = topOverlayOriginalDisplay;
+                vignetteOverlay.style.display = vignetteOverlayOriginalDisplay;
 
                 // 2. Create the final 822x1122 print canvas
                 const printCanvas = document.createElement('canvas');
@@ -863,85 +868,13 @@
                 const ctx = printCanvas.getContext('2d');
                 ctx.imageSmoothingQuality = 'high';
 
-                // 3. Render the full-bleed background art
-                if (cardImageURL) {
-                    const img = new Image();
-                    img.crossOrigin = 'anonymous';
-                    await new Promise((resolve, reject) => {
-                        img.onload = resolve;
-                        img.onerror = reject;
-                        img.src = cardImageURL;
-                    });
-                    
-                    // Create a temporary div to calculate background positioning
-                    const tempBG = document.createElement('div');
-                    tempBG.style.width = '822px';
-                    tempBG.style.height = '1122px';
-                    tempBG.style.backgroundSize = cardImageSize;
-                    tempBG.style.backgroundPosition = cardImagePosition;
-                    tempBG.style.backgroundRepeat = 'no-repeat';
+                // 3. FIX: Fill the *entire* canvas with the border color for the bleed
+                const borderColor = document.getElementById('input-border-color').value;
+                ctx.fillStyle = borderColor;
+                ctx.fillRect(0, 0, 822, 1122);
 
-                    // This is a browser-based calculation of background-size/position
-                    // We draw the image onto our canvas using the same logic
-                    
-                    // Get 'contain' or 'cover' keyword
-                    let sizeKeyword = cardImageSize;
-                    let sizePercent = parseFloat(cardImageSize);
-
-                    let dWidth, dHeight, dx, dy;
-
-                    if (sizeKeyword === 'cover') {
-                        const canvasRatio = 822 / 1122;
-                        const imgRatio = img.width / img.height;
-                        if (canvasRatio > imgRatio) {
-                            dWidth = 822;
-                            dHeight = 822 / imgRatio;
-                        } else {
-                            dHeight = 1122;
-                            dWidth = 1122 * imgRatio;
-                        }
-                    } else if (sizeKeyword === 'contain') {
-                         const canvasRatio = 822 / 1122;
-                        const imgRatio = img.width / img.height;
-                        if (canvasRatio > imgRatio) {
-                            dHeight = 1122;
-                            dWidth = 1122 * imgRatio;
-                        } else {
-                            dWidth = 822;
-                            dHeight = 822 / imgRatio;
-                        }
-                    } else if (sizePercent) {
-                         // Handle percentage zoom
-                        dWidth = 822 * (sizePercent / 100);
-                        dHeight = (dWidth / img.width) * img.height; // Maintain aspect ratio
-                    } else {
-                        // Default to 'cover' logic
-                        const canvasRatio = 822 / 1122;
-                        const imgRatio = img.width / img.height;
-                        if (canvasRatio > imgRatio) {
-                            dWidth = 822;
-                            dHeight = 822 / imgRatio;
-                        } else {
-                            dHeight = 1122;
-                            dWidth = 1122 * imgRatio;
-                        }
-                    }
-
-                    // Calculate position
-                    const [posX, posY] = cardImagePosition.split(' ').map(p => parseFloat(p) / 100);
-                    dx = (822 - dWidth) * posX;
-                    dy = (1122 - dHeight) * posY;
-                    
-                    ctx.drawImage(img, dx, dy, dWidth, dHeight);
-
-                } else {
-                    // Fallback if no image, fill with card background
-                    ctx.fillStyle = cardBG;
-                    ctx.fillRect(0, 0, 822, 1122);
-                }
-
-                // 4. Composite the UI layer on top, scaled to the 750x1050 "safe area"
-                // This preserves the text layout from the preview
+                // 4. Composite the rendered card (uiCanvas) inside the "safe area"
+                // The safe area starts at 36, 36 and is 750x1050
                 ctx.drawImage(uiCanvas, 36, 36, 750, 1050); 
 
                 // 5. Download the final composited image
@@ -960,11 +893,8 @@
                 printBtn.disabled = false;
                 printBtn.textContent = 'Download for Print (Poker 822x1122px)';
                 // Restore preview card just in case of error
-                // FIX: Restore backgroundImage and backgroundColor
-                imageArea.style.backgroundImage = originalImageBG;
-                imageArea.style.backgroundColor = originalImageBGColor; 
-                cardElement.style.background = originalCardBG;
-                imageArea.innerHTML = originalImageHTML;
+                topOverlay.style.display = topOverlayOriginalDisplay;
+                vignetteOverlay.style.display = vignetteOverlayOriginalDisplay;
             }
         }
 
