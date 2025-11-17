@@ -48,9 +48,12 @@
         /* Style for the new main name */
         .card-main-name-container {
             position: absolute;
-            top: 30px; /* Adjusted higher */
-            left: 14px;
-            right: 14px;
+            /* === PRINT SAFE FIX === */
+            /* Increased top/left/right to move text into safe area */
+            top: 60px; 
+            left: 34px;
+            right: 34px;
+            /* === END FIX === */
             z-index: 2;
         }
 
@@ -83,12 +86,15 @@
 
         /* Card Header */
         .card-header {
-            padding: 0 14px 8px 14px; /* Set top padding to 0 */
+            /* === PRINT SAFE FIX === */
+            /* Increased padding and top to move text into safe area */
+            padding: 0 34px 8px 34px;
+            top: 34px; 
+            /* === END FIX === */
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: absolute; /* Position over the image */
-            top: 6px; /* Adjusted higher */
             left: 0;
             right: 0;
             z-index: 2; /* Ensure header content is above the image */
@@ -98,31 +104,26 @@
         /* New element for the top gradient overlay */
         .card-top-overlay {
             position: absolute;
-            top: -2px; /* FIX: Moved up 1px to be clipped by overflow:hidden */
+            top: -2px; 
             left: -2px;
             right: -2px;
-            /* === FINAL FIX === */
             /* Increased bleed to -10px to guarantee overlap on render */
             bottom: -10px; 
-            /* === END FIX === */
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.00) 25%); /* FIX: Gradient now fades over 25% of full height */
-            z-index: 1; /* Below header content but above image */
-            pointer-events: none; /* Allow clicks to pass through */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.00) 25%);
+            z-index: 1;
+            pointer-events: none;
         }
         
         /* New element for the vignette overlay */
         .card-vignette-overlay {
             position: absolute;
-            top: -2px; /* FIX: Moved up 1px to be clipped by overflow:hidden */
+            top: -2px;
             left: -2px;
             right: -2px;
-            /* === FINAL FIX === */
             /* Increased bleed to -10px to guarantee overlap on render */
             bottom: -10px;
-            /* === END FIX === */
-            /* Start with it hidden */
             display: none;
-            /* Rectangular vignette, pushed to the borders */
+            /* Rectangular vignette */
             background: linear-gradient(to bottom, 
                 rgba(0,0,0,0.7) 0%, 
                 rgba(0,0,0,0.1) 30%, 
@@ -172,29 +173,24 @@
 
         /* Card Image Area (for standard layout) */
         .card-image-area {
-            position: absolute; /* Take over the entire card area */
-            top: -2px; /* FIX: Moved up 1px */
-            left: -2px; /* FIX: Moved left 1px */
-            right: -2px; /* FIX: Moved right 1px */
-            /* === FINAL FIX === */
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
             /* Increased bleed to -10px to guarantee overlap on render */
             bottom: -10px; 
-            /* === END FIX === */
-            margin: 0; /* Remove margins */
-            border: none; /* Remove borders */
-            aspect-ratio: unset; /* Let height be controlled by card height */
-            z-index: 0; /* Push to the very back */
-            display: flex; /* Use flex for placeholder */
+            margin: 0;
+            border: none;
+            aspect-ratio: unset;
+            z-index: 0;
+            display: flex;
             justify-content: center;
             align-items: center;
             color: white;
             font-weight: 600;
             overflow: hidden;
-            /* === FINAL FIX === */
             /* Changed placeholder from #a0a0a0 to #000000 */
             background: #000000; 
-            /* === END FIX === */
-            /* Image styling is now done with background-image */
             background-size: 100%;
             background-position: 50% 50%;
             background-repeat: no-repeat;
@@ -210,7 +206,10 @@
             background: none; 
             border-top: none;
             border-bottom: none; 
-            margin: 2px 14px 30px 14px; /* Uses same L/R margin as footer */
+            /* === OVERLAP FIX === */
+            /* Increased margin-bottom from 30px to 60px to clear footer */
+            margin: 2px 34px 60px 34px; 
+            /* === END FIX === */
             padding: 0; 
             position: relative; 
             z-index: 2;
@@ -226,7 +225,10 @@
             flex-grow: 0;
             background: none;
             border: none; 
-            margin: 18px 14px 0 14px; /* Uses same L/R margin as footer */
+            /* === PRINT SAFE FIX === */
+            /* Increased L/R margin to 34px */
+            margin: 18px 34px 0 34px; 
+            /* === END FIX === */
             padding: 0; 
             position: relative; 
             z-index: 2;
@@ -251,8 +253,6 @@
             filter: drop-shadow(0 0 3px rgba(0,0,0,1)); /* Stronger black shadow for icons */
             padding-top: 0; /* Align with text */
             flex-shrink: 0; /* Don't let it shrink */
-            /* min-width: 40px; */ /* REMOVED */
-            /* text-align: left; */ /* REMOVED */
         }
         
         .attack-name {
@@ -314,7 +314,10 @@
         /* Footer */
         .card-footer {
             font-size: 0.7rem;
-            padding: 5px 14px 10px 14px; /* Adjusted padding to create a small gap */
+            /* === PRINT SAFE FIX === */
+            /* Increased L/R/B padding to 34px */
+            padding: 5px 34px 34px 34px; 
+            /* === END FIX === */
             font-weight: 600;
             position: absolute; /* Position absolutely at the bottom */
             bottom: 0;
@@ -587,11 +590,13 @@
                         Download Card (Web PNG)
                     </button>
                     <button type="button" id="download-print-btn" class="mt-2 w-full inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:ring-offset-gray-800">
-                        Download for Print (Poker 822x1122px)
+                        Download for Print (Bleed)
                     </button>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 text-center">Use the 'Print' button for services that require a 36px bleed, as specified in the PDF.</p>
-
-                </form>
+                    <button type="button" id="download-print-with-border-btn" class="mt-2 w-full inline-flex justify-center rounded-md border border-transparent bg-purple-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:ring-offset-gray-800">
+                        Download for Print (with Border)
+                    </button>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 text-center">Use the 'Bleed' button for services that require a 36px bleed, as specified in the PDF.</p>
+                    </form>
             </div>
 
             <div class="flex flex-col items-center">
@@ -785,7 +790,7 @@
             });
         }
 
-        // --- NEW: Download Card for Print ---
+        // --- NEW: Download Card for Print (BLEED) ---
         /**
          * Creates a special 822x1122px PNG with a 36px bleed
          * based on the PDF specifications for a "Poker" card.
@@ -847,9 +852,65 @@ async function downloadCardForPrint() {
                 // --- END FIX ---
 
                 printBtn.disabled = false;
-                printBtn.textContent = 'Download for Print (Poker 822x1122px)';
+                printBtn.textContent = 'Download for Print (Bleed)';
             }
-           }
+        }
+        
+        // --- NEW: Download Card for Print (WITH BORDER) ---
+        async function downloadCardForPrintWithBorder() {
+            const cardElement = document.getElementById('card-preview');
+            // Get the new button
+            const printBtn = document.getElementById('download-print-with-border-btn');
+    
+            printBtn.disabled = true;
+            printBtn.textContent = 'Preparing Print File...';
+
+            // NO BORDER HIDING
+
+            try {
+                // 1. Create the final 822x1122 print canvas
+                const printCanvas = document.createElement('canvas');
+                printCanvas.width = 822;
+                printCanvas.height = 1122;
+                const ctx = printCanvas.getContext('2d');
+                ctx.imageSmoothingQuality = 'high';
+
+                // 2. Fill the ENTIRE canvas with the border color for the bleed
+                // This is still good practice, as it creates the bleed *around* our card.
+                const borderColor = document.getElementById('input-border-color').value || '#000000';
+                ctx.fillStyle = borderColor;
+                ctx.fillRect(0, 0, 822, 1122);
+                
+                // 3. Render the card preview (NOW *WITH* BORDER)
+                const cardCanvas = await html2canvas(cardElement, {
+                    useCORS: true,
+                    scale: 2,
+                    backgroundColor: null // Transparent background
+                });
+
+                // 4. Composite the card on top, inside the 36px bleed area
+                // Target size is 750x1050
+                ctx.drawImage(cardCanvas, 36, 36, 750, 1050);
+
+                // 5. Download the final composited image
+                const link = document.createElement('a');
+                link.href = printCanvas.toDataURL('image/png');
+                link.download = 'my-card-PRINT-WITH-BORDER-822x1122.png'; // New filename
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+            } catch (err) {
+                console.error("Failed to download print-ready card (with border):", err);
+            } finally {
+                // NO BORDER RESTORING
+
+                printBtn.disabled = false;
+                printBtn.textContent = 'Download for Print (with Border)'; // Update text
+            }
+        }
+
 
         // --- START: Data Save/Load Functions ---
 
@@ -1280,6 +1341,7 @@ async function downloadCardForPrint() {
                 /* generateImage removed */
                 downloadCard: document.getElementById('download-btn'),
                 downloadPrint: document.getElementById('download-print-btn'), // NEW
+                downloadPrintWithBorder: document.getElementById('download-print-with-border-btn'), // NEW
                 clearUpload: document.getElementById('clear-upload-btn'),
                 addAttack: document.getElementById('add-attack-btn'),
                 viewEnergy: document.getElementById('view-energy-btn'),
@@ -1457,7 +1519,8 @@ async function downloadCardForPrint() {
             // --- Bind Buttons ---
             /* generateImage listener removed */
             if (buttons.downloadCard) buttons.downloadCard.addEventListener('click', downloadCard);
-            if (buttons.downloadPrint) buttons.downloadPrint.addEventListener('click', downloadCardForPrint); // NEW
+            if (buttons.downloadPrint) buttons.downloadPrint.addEventListener('click', downloadCardForPrint); // EXISTING
+            if (buttons.downloadPrintWithBorder) buttons.downloadPrintWithBorder.addEventListener('click', downloadCardForPrintWithBorder); // NEW
             if (buttons.addAttack) buttons.addAttack.addEventListener('click', () => {
                 createAttackForm();
                 saveDataToLocalStorage(); // Save change
