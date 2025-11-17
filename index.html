@@ -104,7 +104,7 @@
             right: 0;
             bottom: 0; /* FIX: Make element full height */
             /* height: 90px; */ /* REMOVED */
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.01) 25%); /* FIX: Gradient now fades over 25% of full height */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.00) 25%); /* FIX: Gradient now fades over 25% of full height */
             z-index: 1; /* Below header content but above image */
             pointer-events: none; /* Allow clicks to pass through */
         }
@@ -112,7 +112,7 @@
         /* New element for the vignette overlay */
         .card-vignette-overlay {
             position: absolute;
-            top: -1px; /* FIX: Moved up 1px to be clipped by overflow:hidden */
+            top: 0px; /* FIX: Moved up 1px to be clipped by overflow:hidden */
             left: 0;
             right: 0;
             bottom: 0;
@@ -122,14 +122,14 @@
             background: linear-gradient(to bottom, 
                 rgba(0,0,0,0.7) 0%, 
                 rgba(0,0,0,0.1) 30%, 
-                rgba(0,0,0,0.01) 70%, 
+                rgba(0,0,0,0.00) 70%, 
                 rgba(0,0,0,0.1) 90%, 
                 rgba(0,0,0,0.7) 100% 
             ),
             linear-gradient(to right,
                 rgba(0,0,0,0.7) 0%, 
                 rgba(0,0,0,0.1) 30%, 
-                rgba(0,0,0,0.01) 50%, 
+                rgba(0,0,0,0.00) 50%, 
                 rgba(0,0,0,0.1) 70%, 
                 rgba(0,0,0,0.7) 100% 
             );
@@ -169,10 +169,10 @@
         /* Card Image Area (for standard layout) */
         .card-image-area {
             position: absolute; /* Take over the entire card area */
-            top: -1px; /* FIX: Moved up 1px */
+            top: 0px; /* FIX: Moved up 1px */
             left: -1px; /* FIX: Moved left 1px */
             right: -1px; /* FIX: Moved right 1px */
-            bottom: -1px; /* FIX: Moved bottom 1px */
+            bottom: 0px; /* FIX: Moved bottom 1px */
             /* width: 100%; */ /* REMOVED */
             /* height: 100%; */ /* REMOVED */
             margin: 0; /* Remove margins */
@@ -1555,4 +1555,5 @@
     </script>
 </body>
 </html>
+
 
