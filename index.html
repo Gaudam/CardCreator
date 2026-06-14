@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en" id="html-root">
 <head>
@@ -48,9 +49,9 @@
         
         .card-main-name-container {
             position: absolute;
-            top: 32px; /* Middle ground between original 30px and tight 24px */
-            left: 12px; /* Middle ground */
-            right: 12px; /* Middle ground */
+            top: 32px; 
+            left: 12px; 
+            right: 12px; 
             z-index: 2;
         }
 
@@ -78,15 +79,16 @@
         }
 
         .tier-exotic {
-            color: #FF1493; /* Deep Pink */
+            color: #FF1493; 
             text-shadow: 1px 1px 2px #FFF, -1px -1px 2px #FFF, 1px -1px 2px #FFF, -1px 1px 2px #FFF, 0 0 5px #FFF;
         }
         
         /* --- Card Layout & Structure --- */
         .card {
-            width: 100%;
-            max-width: 380px;
-            aspect-ratio: 63 / 88;
+            width: 380px; /* Fixed width prevents mobile layout breakage */
+            height: 531px; /* Fixed height (63/88 ratio) */
+            flex-shrink: 0; 
+            box-sizing: border-box;
             border: 12px solid #f9d71c;
             border-radius: 18px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.25);
@@ -97,15 +99,16 @@
             position: relative;
             justify-content: flex-end;
             padding-bottom: 0px;
+            transform-origin: top center;
         }
 
         /* --- Card Header & Stats (HP/AC) --- */
         .card-header {
-            top: 7px; /* Middle ground between 6px and 4px */
-            padding: 0 12px 4px 12px; /* Middle ground horizontal padding */
+            top: 7px; 
+            padding: 0 12px 4px 12px; 
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Ensure items pin to the top reliably and cleanly for html2canvas */
+            align-items: center; 
             position: absolute;
             left: 0;
             right: 0;
@@ -209,7 +212,7 @@
             background: none; 
             border-top: none;
             border-bottom: none; 
-            margin: 2px 12px 27px 12px; /* Middle ground positioning */
+            margin: 2px 12px 27px 12px; 
             padding: 0; 
             position: relative; 
             z-index: 2;
@@ -227,7 +230,7 @@
             flex-grow: 0;
             background: none;
             border: none; 
-            margin: 16px 12px 0 12px; /* Middle ground positioning */
+            margin: 16px 12px 0 12px; 
             padding: 0; 
             position: relative; 
             z-index: 2;
@@ -252,7 +255,7 @@
             font-family: 'Inter', sans-serif;
             font-weight: 700;
             font-size: 16px;
-            line-height: 16px; /* Forcing minimal line-height */
+            line-height: 16px; 
             margin: 0;
             text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
         }
@@ -261,8 +264,8 @@
             font-family: 'Inter', sans-serif;
             font-weight: 400;
             font-size: 14px;
-            line-height: 1.15; /* Tighter line height to prevent text drift */
-            margin: 2px 0 0 0; /* Tight margin */
+            line-height: 1.15; 
+            margin: 2px 0 0 0; 
             padding: 0;
             text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
         }
@@ -277,7 +280,7 @@
         }
         
         .card-wrr-bar {
-            display: none; /* Hidden in full-art mode */
+            display: none; 
         }
         
         .wrr-item {
@@ -300,7 +303,7 @@
             line-height: 1.3;
             text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
             
-            padding: 4px 12px 9px 12px; /* Middle ground positioning */
+            padding: 4px 12px 9px 12px; 
             position: absolute;
             bottom: 0;
             left: 0;
@@ -362,7 +365,6 @@
         .dark .modal-content th {
             color: #f3f4f6;
         }
-
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 p-4 md:p-8 transition-colors duration-200">
@@ -389,9 +391,10 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <!-- FORM CONTAINER: Mobile Order 2, Desktop Order 1 -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg order-2 lg:order-1">
                 <h2 class="text-2xl font-bold mb-4 text-gray-700 dark:text-gray-200">Card Details</h2>
                 <form id="card-form" class="space-y-4">
 
@@ -527,56 +530,60 @@
                 </form>
             </div>
 
-            <div class="flex flex-col items-center">
-                <h2 class="text-2xl font-bold mb-4 text-gray-700 dark:text-gray-200 md:hidden">Card Preview</h2>
+            <!-- PREVIEW CONTAINER: Mobile Order 1 (on top), Desktop Order 2 -->
+            <div class="flex flex-col w-full order-1 lg:order-2">
+                <h2 class="text-2xl font-bold mb-4 text-gray-700 dark:text-gray-200 lg:hidden text-center">Card Preview</h2>
                 
-                <div id="card-preview" class="card type-colorless">
-                    
-                    <div id="card-top-overlay" class="card-top-overlay"></div>
-                    <div id="card-vignette-overlay" class="card-vignette-overlay"></div>
-                    <div id="card-bottom-overlay" class="card-bottom-overlay"></div> 
-                    
-                    <div class="card-header">
-                        <h3 id="card-creature-type" class="font-creature-type tier-common">Robot</h3>
-                        <div class="flex items-center space-x-3">
-                            <div id="card-ac-container" class="flex items-center space-x-1">
-                                <span class="font-creature-type">AC</span>
-                                <span id="card-ac" class="font-card-title ml-1">15</span>
+                <!-- Dynamic Scale Wrapper for Mobile Layout Preservation -->
+                <div id="card-scale-wrapper" class="w-full flex justify-center origin-top relative mb-8 lg:mb-0">
+                    <div id="card-preview" class="card type-colorless">
+                        
+                        <div id="card-top-overlay" class="card-top-overlay"></div>
+                        <div id="card-vignette-overlay" class="card-vignette-overlay"></div>
+                        <div id="card-bottom-overlay" class="card-bottom-overlay"></div> 
+                        
+                        <div class="card-header">
+                            <h3 id="card-creature-type" class="font-creature-type tier-common">Robot</h3>
+                            <div class="flex items-center space-x-3">
+                                <div id="card-ac-container" class="flex items-center space-x-1">
+                                    <span class="font-creature-type">AC</span>
+                                    <span id="card-ac" class="font-card-title ml-1">15</span>
+                                </div>
+                                <div id="card-hp-container" class="flex items-center space-x-1">
+                                    <span class="font-creature-type">HP</span>
+                                    <span id="card-hp" class="font-card-title ml-1">120</span>
+                                </div>
                             </div>
-                            <div id="card-hp-container" class="flex items-center space-x-1">
-                                <span class="font-creature-type">HP</span>
-                                <span id="card-hp" class="font-card-title ml-1">120</span>
+                        </div>
+                        
+                        <div class="card-main-name-container">
+                            <h2 id="card-name" class="font-card-title">Gemini</h2>
+                        </div>
+
+                        <div class="card-image-area" id="card-image-area">
+                            <div class="text-center p-4">
+                                Upload an image to create your card's art.
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="card-main-name-container">
-                        <h2 id="card-name" class="font-card-title">Gemini</h2>
-                    </div>
-
-                    <div class="card-image-area" id="card-image-area">
-                        <div class="text-center p-4">
-                            Upload an image to create your card's art.
+                        
+                        <div class="card-attacks" id="card-attacks-output">
                         </div>
-                    </div>
-                    
-                    <div class="card-attacks" id="card-attacks-output">
-                    </div>
 
-                    <div class="card-stats-bar">
-                        <span id="card-flavor-text">It constantly processes information from across the web to answer any question.</span>
-                    </div>
-
-                    <div id="card-wrr-bar" class="card-wrr-bar">
-                    </div>
-                    
-                    <div class="card-footer">
-                        <div class="card-footer-item">
-                            Creator: <span id="card-illustrator">AI Generated</span>
+                        <div class="card-stats-bar">
+                            <span id="card-flavor-text">It constantly processes information from across the web to answer any question.</span>
                         </div>
-                        <div class="card-footer-item text-right">
-                            <span id="card-set-name">Galactic Genesis</span>
-                            <span id="card-number" class="ml-2">1/100</span> 
+
+                        <div id="card-wrr-bar" class="card-wrr-bar">
+                        </div>
+                        
+                        <div class="card-footer">
+                            <div class="card-footer-item">
+                                Creator: <span id="card-illustrator">AI Generated</span>
+                            </div>
+                            <div class="card-footer-item text-right">
+                                <span id="card-set-name">Galactic Genesis</span>
+                                <span id="card-number" class="ml-2">1/100</span> 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -593,15 +600,52 @@
         // --- Element References (filled on DOMContentLoaded) ---
         let inputs, outputs, buttons, imageControls;
 
+
+        // --- Mobile Layout Scaling Logic ---
+        
+        /**
+         * Uses CSS transforms to gracefully scale the card wrapper down on smaller screens.
+         * Ensures the internal structure (fonts, positions, wrapping) never breaks!
+         */
+        function updateCardScale() {
+            const wrapper = document.getElementById('card-scale-wrapper');
+            const card = document.getElementById('card-preview');
+            if (!wrapper || !card) return;
+
+            // Compute available parent width with some padding
+            const parentWidth = wrapper.parentElement.clientWidth;
+            const availableWidth = parentWidth - 16; 
+            const cardNativeWidth = 380;
+            const cardNativeHeight = 531;
+
+            if (availableWidth < cardNativeWidth) {
+                const scale = availableWidth / cardNativeWidth;
+                card.style.transform = `scale(${scale})`;
+                // Collapse the wrapper height to match the scaled visual bounds
+                wrapper.style.height = `${cardNativeHeight * scale}px`;
+            } else {
+                card.style.transform = 'none';
+                wrapper.style.height = `${cardNativeHeight}px`;
+            }
+        }
+        
+        // Ensure UI scaling recalculates on screen resize
+        window.addEventListener('resize', updateCardScale);
+
+
         // --- Card Download Functions ---
 
         /**
          * Helper function to ensure perfect 1:1 replication in html2canvas.
-         * Bypasses the thick border positioning bug by converting the border to a fake visual layer.
          */
         const applyHtml2CanvasFixes = (clonedDoc) => {
             const clonedCard = clonedDoc.getElementById('card-preview');
             if (!clonedCard) return;
+
+            // 0. RESET SCALING for canvas generation.
+            // Even if the visual UI is scaled down for a mobile screen, the screenshot
+            // should always render in full native 1:1 scale!
+            clonedCard.style.transform = 'none';
 
             // 1. Fix line heights that cause vertical text misalignment in html2canvas
             const creatureTypes = clonedCard.querySelectorAll('.font-creature-type');
@@ -699,7 +743,6 @@
         
         /**
          * Downloads a 822x1122 print-ready file *with* the card's border visible.
-         * The border color is used as the 36px bleed around the card.
          */
         async function downloadCardForPrint() {
             const cardElement = document.getElementById('card-preview');
@@ -709,19 +752,16 @@
             printBtn.textContent = 'Preparing Print File...';
 
             try {
-                // 1. Create the final 822x1122 print canvas
                 const printCanvas = document.createElement('canvas');
                 printCanvas.width = 822;
                 printCanvas.height = 1122;
                 const ctx = printCanvas.getContext('2d');
                 ctx.imageSmoothingQuality = 'high';
 
-                // 2. Fill the ENTIRE canvas with the border color for the bleed
                 const borderColor = document.getElementById('input-border-color').value || '#f9d71c';
                 ctx.fillStyle = borderColor;
                 ctx.fillRect(0, 0, 822, 1122);
                 
-                // 3. Render the original card preview
                 const cardCanvas = await html2canvas(cardElement, {
                     useCORS: true,
                     scale: 2,
@@ -729,10 +769,8 @@
                     onclone: applyHtml2CanvasFixes
                 });
 
-                // 4. Composite the card on top, inside the 36px bleed area
                 ctx.drawImage(cardCanvas, 36, 36, 750, 1050);
 
-                // 5. Download the final composited image
                 const link = document.createElement('a');
                 link.href = printCanvas.toDataURL('image/png');
                 link.download = 'my-card-PRINT-822x1122.png';
@@ -753,9 +791,6 @@
 
         // --- Data Import/Export & LocalStorage ---
 
-        /**
-         * Gathers all data from the form into a single object.
-         */
         function getCurrentCardData() {
             const inputs = {
                 creatureType: document.getElementById('input-creature-type').value,
@@ -770,7 +805,6 @@
                 vignetteToggle: document.getElementById('input-vignette-toggle').checked,
                 setName: document.getElementById('input-set-name').value,
                 cardNumber: document.getElementById('input-card-number').value,
-                // printBorderToggle: REMOVED
             };
 
             const imageControls = {
@@ -797,13 +831,9 @@
             return { ...inputs, ...imageControls, attacks, theme };
         }
 
-        /**
-         * Populates the entire form and preview from a data object.
-         */
         function populateForm(data) {
             if (!data) return;
 
-            // Load theme
             if (data.theme?.darkMode) {
                 document.documentElement.classList.add('dark');
                 document.getElementById('dark-mode-toggle').checked = true;
@@ -812,7 +842,6 @@
                 document.getElementById('dark-mode-toggle').checked = false;
             }
 
-            // Load simple inputs
             document.getElementById('input-creature-type').value = data.creatureType || 'Robot';
             document.getElementById('input-card-tier').value = data.cardTier || 'Common';
             document.getElementById('input-card-name').value = data.cardName || 'Gemini';
@@ -825,33 +854,29 @@
             document.getElementById('input-vignette-toggle').checked = data.vignetteToggle || false;
             document.getElementById('input-set-name').value = data.setName || 'Set Name';
             document.getElementById('input-card-number').value = data.cardNumber || '1/100';
-            // printBorderToggle: REMOVED
 
-            // Load image
             const imageArea = document.getElementById('card-image-area');
             if (data.cardImage && data.cardImage !== 'none') {
                 imageArea.style.backgroundImage = data.cardImage;
-                imageArea.innerHTML = ''; // Clear placeholder
+                imageArea.innerHTML = ''; 
                 document.getElementById('image-controls').classList.remove('hidden');
                 document.getElementById('image-zoom').value = data.imageZoom || 100;
                 document.getElementById('image-pos-x').value = data.imagePosX || 50;
                 document.getElementById('image-pos-y').value = data.imagePosY || 50;
                 uploadedImageUrl = data.cardImage.includes("data:image") ? data.cardImage.match(/url\("?(.+?)"?\)/)[1] : null;
             } else {
-                // Clear image
                 imageArea.style.backgroundImage = 'none';
                 imageArea.innerHTML = `<div class="text-center p-4">Upload an image to create your card's art.</div>`;
                 document.getElementById('image-controls').classList.add('hidden');
                 uploadedImageUrl = null;
             }
 
-            // Load attacks
-            document.getElementById('attack-forms-container').innerHTML = ''; // Clear existing
+            document.getElementById('attack-forms-container').innerHTML = ''; 
             if (data.attacks && data.attacks.length > 0) {
                 data.attacks.forEach(attackData => createAttackForm(attackData));
             }
 
-            // Trigger all update functions to sync preview
+            // Trigger updates
             document.getElementById('input-creature-type').dispatchEvent(new Event('input'));
             document.getElementById('input-card-tier').dispatchEvent(new Event('change'));
             document.getElementById('input-card-name').dispatchEvent(new Event('input'));
@@ -868,12 +893,8 @@
             updateImageTransform();
             updateCardAttacks();
             updateCardTier();
-            // updateCardBorder(): REMOVED
         }
 
-        /**
-         * Saves the current card data to localStorage.
-         */
         function saveDataToLocalStorage() {
             try {
                 const data = getCurrentCardData();
@@ -883,31 +904,25 @@
             }
         }
 
-        /**
-         * Loads card data from localStorage on page load.
-         */
         function loadDataFromLocalStorage() {
             const dataString = localStorage.getItem('customCardData');
             if (dataString) {
                 try {
                     const data = JSON.parse(dataString);
                     populateForm(data);
-                    return true; // Data was loaded
+                    return true; 
                 } catch (error) {
                     console.error("Failed to parse data from localStorage:", error);
-                    localStorage.removeItem('customCardData'); // Clear bad data
+                    localStorage.removeItem('customCardData');
                     return false;
                 }
             }
-            return false; // No data found
+            return false; 
         }
 
-        /**
-         * Exports the current card data as a .json file.
-         */
         function exportCardData() {
             const data = getCurrentCardData();
-            const jsonString = JSON.stringify(data, null, 2); // Pretty-print JSON
+            const jsonString = JSON.stringify(data, null, 2); 
             const blob = new Blob([jsonString], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             
@@ -921,9 +936,6 @@
             URL.revokeObjectURL(url);
         }
 
-        /**
-         * Handles the file upload for importing card data.
-         */
         function importCardData(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -933,7 +945,7 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     populateForm(data);
-                    saveDataToLocalStorage(); // Save imported data
+                    saveDataToLocalStorage();
                 } catch (error) {
                     console.error("Failed to import card data:", error);
                 }
@@ -945,9 +957,6 @@
 
         // --- Dynamic Attack Form Management ---
 
-        /**
-         * Creates a new attack form and adds it to the DOM.
-         */
         function createAttackForm(defaultValues = {}) {
             attackCounter++;
             const id = attackCounter;
@@ -982,14 +991,12 @@
 
             formContainer.appendChild(attackForm);
 
-            // Add event listeners
             attackForm.querySelector('.delete-attack-btn').addEventListener('click', () => {
                 attackForm.remove();
                 updateCardAttacks();
                 saveDataToLocalStorage();
             });
             
-            // Add listeners to all inputs to update preview
             attackForm.querySelectorAll('input, textarea').forEach(el => {
                 el.addEventListener('input', () => {
                     updateCardAttacks();
@@ -1001,9 +1008,6 @@
 
         // --- Card Preview Update Functions ---
 
-        /**
-         * Reads all attack forms and updates the card preview.
-         */
         function updateCardAttacks() {
             const forms = document.querySelectorAll('#attack-forms-container .attack-form');
             const outputContainer = document.getElementById('card-attacks-output');
@@ -1041,9 +1045,6 @@
             });
         }
         
-        /**
-         * Updates the card image's zoom and position.
-         */
         function updateImageTransform() {
             if (!inputs.imageZoom || !inputs.imagePosX || !inputs.imagePosY || !outputs.imageArea || !outputs.zoomValue || !outputs.posXValue || !outputs.posYValue) return;
             const zoom = inputs.imageZoom.value;
@@ -1058,9 +1059,6 @@
             outputs.posYValue.textContent = posY;
         }
 
-        /**
-         * Updates the card's creature type color based on the selected tier.
-         */
         function updateCardTier() {
             const inputCardTier = document.getElementById('input-card-tier');
             const creatureTypeOutput = document.getElementById('card-creature-type');
@@ -1078,14 +1076,13 @@
             }
         }
 
-        /**
-         * REMOVED: updateCardBorder() function
-         */
         
         // --- Main Initialization (DOMContentLoaded) ---
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- 1. Get Element References ---
+            // Invoke the card scaling layout right away!
+            updateCardScale();
+
             inputs = {
                 creatureType: document.getElementById('input-creature-type'), 
                 inputCardTier: document.getElementById('input-card-tier'),
@@ -1103,7 +1100,6 @@
                 imageZoom: document.getElementById('image-zoom'),
                 imagePosX: document.getElementById('image-pos-x'),
                 imagePosY: document.getElementById('image-pos-y'),
-                // printBorderToggle: REMOVED
             };
 
             outputs = {
@@ -1130,7 +1126,7 @@
 
             buttons = {
                 downloadCard: document.getElementById('download-btn'),
-                downloadPrint: document.getElementById('download-print-btn'), // Corrected
+                downloadPrint: document.getElementById('download-print-btn'),
                 clearUpload: document.getElementById('clear-upload-btn'),
                 addAttack: document.getElementById('add-attack-btn'),
                 resetImage: document.getElementById('reset-image-btn'),
@@ -1141,23 +1137,17 @@
             
             imageControls = document.getElementById('image-controls');
 
-            // --- 2. Define Helper Functions ---
             
             function bindText(inputEl, outputEl, parserFn = null) {
-                if (!inputEl || !outputEl) {
-                    console.warn("bindText: Missing input or output element.", inputEl, outputEl);
-                    return;
-                }
+                if (!inputEl || !outputEl) return;
                 const update = () => {
                     outputEl[parserFn ? 'innerHTML' : 'textContent'] = parserFn 
                         ? parserFn(inputEl.value) 
                         : inputEl.value;
                 };
                 inputEl.addEventListener('input', update);
-                update(); // Initial sync
+                update(); 
             }
-            
-            // --- 3. Bind UI Elements ---
             
             bindText(inputs.creatureType, outputs.creatureType); 
             bindText(inputs.cardName, outputs.cardName);
@@ -1184,15 +1174,12 @@
             if(inputs.cardAc) inputs.cardAc.addEventListener('input', updateAc);
             updateAc();
             
-            // RESTORED: Simple Border Color binding
             if (inputs.borderColor && outputs.card) {
                 inputs.borderColor.addEventListener('input', () => {
                     outputs.card.style.borderColor = inputs.borderColor.value;
                 });
-                inputs.borderColor.dispatchEvent(new Event('input')); // Initial sync
+                inputs.borderColor.dispatchEvent(new Event('input'));
             }
-
-            // printBorderToggle binding: REMOVED
 
             function hexToRgba(hex, alpha) {
                 if (!hex || hex.length < 7) hex = '#000000';
@@ -1294,12 +1281,8 @@
                 saveDataToLocalStorage();
             });
 
-            // --- 4. Bind Button Listeners ---
             if (buttons.downloadCard) buttons.downloadCard.addEventListener('click', downloadCard);
-            
-            if (buttons.downloadPrint) { // Corrected
-                buttons.downloadPrint.addEventListener('click', downloadCardForPrint); // Corrected
-            }
+            if (buttons.downloadPrint) buttons.downloadPrint.addEventListener('click', downloadCardForPrint);
             
             if (buttons.addAttack) buttons.addAttack.addEventListener('click', () => {
                 createAttackForm();
@@ -1313,7 +1296,6 @@
                 saveDataToLocalStorage();
             });
 
-            // Add auto-save listeners to all form inputs
             Object.values(inputs).forEach(inputEl => {
                 if (inputEl) {
                     const eventType = ['checkbox', 'select-one'].includes(inputEl.type) ? 'change' : 'input';
@@ -1323,8 +1305,6 @@
                     }
                 }
             });
-            
-            // --- 5. Initial Page Setup ---
             
             const dataLoaded = loadDataFromLocalStorage();
 
@@ -1337,7 +1317,6 @@
             }
             updateCardAttacks();
             updateCardTier();
-            // updateCardBorder(): REMOVED
             
             if (!dataLoaded) {
                 document.documentElement.classList.add('dark');
@@ -1354,3 +1333,5 @@
     </script>
 </body>
 </html>
+
+```
