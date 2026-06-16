@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en" id="html-root">
 <head>
@@ -18,7 +17,8 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Sofia Sans Condensed:wght@400;700&display=swap" rel="stylesheet">
+   
 
     <style>
         /* --- Base & Dark Mode --- */
@@ -39,28 +39,37 @@
 
         /* --- Card Typography --- */
         .font-card-title {
-            font-family: 'Bebas Neue', cursive; 
+            font-family: 'Sofia Sans Condensed', sans-serif;
             text-shadow: 1px 1px 3px #000, -1px -1px 3px #000, 1px -1px 3px #000, -1px 1px 3px #000;
-            font-size: 30px; 
+            font-size: 28px; 
             color: white;
-            line-height: 30px; /* Forced line height to prevent html2canvas stretching */
+            line-height: 4px; /* Forced line height to prevent html2canvas stretching */
             margin: 0;
         }
         
         .card-main-name-container {
             position: absolute;
-            top: 32px; 
+            top: 46px; 
             left: 12px; 
             right: 12px; 
             z-index: 2;
         }
 
         .font-creature-type {
-            font-family: 'Bebas Neue', cursive; 
+            font-family: 'Sofia Sans Condensed', cursive; 
             text-shadow: 1px 1px 3px #000, -1px -1px 3px #000, 1px -1px 3px #000, -1px 1px 3px #000;
-            font-size: 26px;
+            font-size: 28px;
             color: white;
             line-height: 26px;
+            margin: 0;
+        }
+
+        .font-stat-label {
+            font-family: 'Sofia Sans Condensed', cursive; 
+            text-shadow: 1px 1px 2px #000, -1px -1px 2px #000, 1px -1px 2px #000, -1px 1px 2px #000;
+            font-size: 28px;
+            color: white;
+            line-height: 32px;
             margin: 0;
         }
         
@@ -69,7 +78,7 @@
         .tier-uncommon { color: #4CAF50; }
         .tier-rare { color: #00B0FF; }
         .tier-masterwork { color: #FFD700; }
-        .tier-epic { color: #9C27B0; }
+        .tier-epic { color: #a51ebd; }
         .tier-legendary { color: #FF9800; }
         .tier-mythic { color: #800000; }
         
@@ -104,11 +113,11 @@
 
         /* --- Card Header & Stats (HP/AC) --- */
         .card-header {
-            top: 7px; 
+            top: 10px; 
             padding: 0 12px 4px 12px; 
             display: flex;
             justify-content: space-between;
-            align-items: center; 
+            align-items: flex-start; 
             position: absolute;
             left: 0;
             right: 0;
@@ -119,15 +128,20 @@
         #card-hp-container, #card-ac-container {
             display: flex;
             align-items: center;
-            line-height: 26px;
+            line-height: 18px;
         }
 
-        #card-hp-container .font-card-title, #card-ac-container .font-card-title {
-            font-size: 26px; 
+        #card-hp-container .font-card-title {
+            font-size: 28px; 
             margin-left: 2px;
         }
-        #card-hp-container .font-creature-type, #card-ac-container .font-creature-type {
-            font-size: 26px; 
+        #card-ac-container .font-card-title, #card-save-container .font-card-title {
+            font-size: 28px; 
+            margin-left: 2px;
+        }
+
+        #card-hp-container .font-creature-type {
+            font-size: 28px; 
             margin-right: 2px;
             font-weight: 400;
         }
@@ -425,11 +439,15 @@
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <label for="input-card-hp" class="block text-sm font-medium text-gray-700 dark:text-gray-300">HP</label>
-                                <input type="number" id="input-card-hp" value="120" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <input type="text" id="input-card-hp" value="120" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <label for="input-card-ac" class="block text-sm font-medium text-gray-700 dark:text-gray-300">AC</label>
                                 <input type="number" id="input-card-ac" value="15" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                            <div class="col-span-2" >
+                                <label for="input-card-save" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Save</label>
+                                <input type="text" id="input-card-save" value="" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <label for="input-border-color" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Border Color</label>
@@ -450,6 +468,10 @@
                             <div class="col-span-2 md:col-span-1">
                                 <label for="input-card-number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Card Number (e.g., 15/150)</label>
                                 <input type="text" id="input-card-number" value="1/100" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                            <div class="col-span-2">
+                                <label for="input-illustrator" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Creator Name</label>
+                                <input type="text" id="input-illustrator" value="AI Generated" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
                             </div>
                         </div>
                     </fieldset>
@@ -496,14 +518,6 @@
                     </fieldset>
                     
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
-                        <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Creator</legend>
-                        <div class="mt-0">
-                            <label for="input-illustrator" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Creator Name</label>
-                            <input type="text" id="input-illustrator" value="AI Generated" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
-                        </div>
-                    </fieldset>
-
-                    <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Import/Export Card</legend>
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Save your card data as a .json file to edit later or on another device.</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -544,14 +558,21 @@
                         
                         <div class="card-header">
                             <h3 id="card-creature-type" class="font-creature-type tier-common">Robot</h3>
-                            <div class="flex items-center space-x-3">
-                                <div id="card-ac-container" class="flex items-center space-x-1">
-                                    <span class="font-creature-type">AC</span>
-                                    <span id="card-ac" class="font-card-title ml-1">15</span>
-                                </div>
+                            <div class="flex flex-col items-end -space-y-1">
                                 <div id="card-hp-container" class="flex items-center space-x-1">
                                     <span class="font-creature-type">HP</span>
-                                    <span id="card-hp" class="font-card-title ml-1">120</span>
+                                    <span id="card-hp" class="font-card-title">120</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <div id="card-ac-container" class="flex items-center space-x-3">
+                                        <span class="font-stat-label">AC</span>
+                                        <span id="card-ac" class="font-card-title">15</span>
+                                    </div>
+                                    <span id="ac-save-separator" class="font-stat-label text-gray-400 mx-1" style="display: none;">|</span>
+                                    <div id="card-save-container" class="flex items-center space-x-1" style="display: none;">
+                                        <span class="font-stat-label">SAVE</span>
+                                        <span id="card-save" class="font-card-title"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -582,7 +603,7 @@
                             </div>
                             <div class="card-footer-item text-right">
                                 <span id="card-set-name">Galactic Genesis</span>
-                                <span id="card-number" class="ml-2">1/100</span> 
+                                <span id="card-number" class="ml-2" contenteditable="true">1/100</span> 
                             </div>
                         </div>
                     </div>
@@ -651,11 +672,11 @@
             const creatureTypes = clonedCard.querySelectorAll('.font-creature-type');
             creatureTypes.forEach(el => el.style.lineHeight = '26px');
 
-            const hpAcText = clonedCard.querySelectorAll('#card-hp-container, #card-ac-container');
+            const hpAcText = clonedDoc.querySelectorAll('#card-hp-container, #card-ac-container, #card-save-container');
             hpAcText.forEach(el => el.style.lineHeight = '26px');
             
             const cardName = clonedCard.querySelector('#card-name');
-            if (cardName) cardName.style.lineHeight = '30px';
+            if (cardName) cardName.style.lineHeight = '0px';
 
             const attacks = clonedCard.querySelectorAll('.attack-name, .attack-damage');
             attacks.forEach(el => el.style.lineHeight = '16px');
@@ -688,9 +709,17 @@
             
             const nameContainer = clonedCard.querySelector('.card-main-name-container');
             if (nameContainer) {
-                nameContainer.style.top = '32px'; // 32 + 12
-                nameContainer.style.left = '24px'; // 12 + 12
-                nameContainer.style.right = '24px'; // 12 + 12
+                // --- AUTOMATED TOP POSITION FIX ---
+                // Read the live 'top' value from the on-screen card.
+                const liveNameContainer = document.querySelector('#card-preview .card-main-name-container');
+                const liveTop = window.getComputedStyle(liveNameContainer).getPropertyValue('top');
+                const liveTopValue = parseFloat(liveTop); // e.g., 48
+                
+                // Apply the 10px offset for html2canvas rendering.
+                nameContainer.style.top = `${liveTopValue - 2}px`; 
+                
+                nameContainer.style.left = '24px';
+                nameContainer.style.right = '24px';
             }
             
             const footer = clonedCard.querySelector('.card-footer');
@@ -702,7 +731,7 @@
             
             const overlays = clonedCard.querySelectorAll('.card-top-overlay, .card-bottom-overlay, .card-vignette-overlay, .card-image-area');
             overlays.forEach(el => {
-                el.style.top = '10px';    // -2 + 12
+                el.style.top = '0px';    // -2 + 12
                 el.style.left = '10px';   // -2 + 12
                 el.style.right = '10px';  // -2 + 12
                 el.style.bottom = '2px';  // -10 + 12
@@ -798,6 +827,7 @@
                 cardName: document.getElementById('input-card-name').value,
                 cardHp: document.getElementById('input-card-hp').value,
                 cardAc: document.getElementById('input-card-ac').value,
+                cardSave: document.getElementById('input-card-save').value,
                 borderColor: document.getElementById('input-border-color').value,
                 flavorText: document.getElementById('input-flavor-text').value,
                 illustrator: document.getElementById('input-illustrator').value,
@@ -847,6 +877,7 @@
             document.getElementById('input-card-name').value = data.cardName || 'Gemini';
             document.getElementById('input-card-hp').value = data.cardHp ?? '';
             document.getElementById('input-card-ac').value = data.cardAc ?? '';
+            document.getElementById('input-card-save').value = data.cardSave || '';
             document.getElementById('input-border-color').value = data.borderColor || '#f9d71c';
             document.getElementById('input-flavor-text').value = data.flavorText || '';
             document.getElementById('input-illustrator').value = data.illustrator || 'AI Generated';
@@ -882,6 +913,7 @@
             document.getElementById('input-card-name').dispatchEvent(new Event('input'));
             document.getElementById('input-card-hp').dispatchEvent(new Event('input'));
             document.getElementById('input-card-ac').dispatchEvent(new Event('input'));
+            document.getElementById('input-card-save').dispatchEvent(new Event('input'));
             document.getElementById('input-border-color').dispatchEvent(new Event('input'));
             document.getElementById('input-flavor-text').dispatchEvent(new Event('input'));
             document.getElementById('input-illustrator').dispatchEvent(new Event('input'));
@@ -892,6 +924,7 @@
             
             updateImageTransform();
             updateCardAttacks();
+            updateAttackControls();
             updateCardTier();
         }
 
@@ -973,7 +1006,11 @@
             attackForm.dataset.id = id;
 
             attackForm.innerHTML = `
-                <button type="button" class="delete-attack-btn absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold">&times;</button>
+                <div class="absolute -top-2.5 -right-2.5 flex items-center gap-1">
+                    <button type="button" class="move-attack-up bg-gray-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-xs disabled:opacity-50 disabled:cursor-not-allowed" title="Move Up">▲</button>
+                    <button type="button" class="move-attack-down bg-gray-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-xs disabled:opacity-50 disabled:cursor-not-allowed" title="Move Down">▼</button>
+                    <button type="button" class="delete-attack-btn bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold" title="Delete Attack">&times;</button>
+                </div>
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
@@ -994,6 +1031,7 @@
             attackForm.querySelector('.delete-attack-btn').addEventListener('click', () => {
                 attackForm.remove();
                 updateCardAttacks();
+                updateAttackControls();
                 saveDataToLocalStorage();
             });
             
@@ -1003,8 +1041,35 @@
                     saveDataToLocalStorage();
                 });
             });
+
+            attackForm.querySelector('.move-attack-up').addEventListener('click', () => {
+                const parent = attackForm.parentElement;
+                if (attackForm.previousElementSibling) {
+                    parent.insertBefore(attackForm, attackForm.previousElementSibling);
+                    updateCardAttacks();
+                    updateAttackControls();
+                    saveDataToLocalStorage();
+                }
+            });
+
+            attackForm.querySelector('.move-attack-down').addEventListener('click', () => {
+                const parent = attackForm.parentElement;
+                if (attackForm.nextElementSibling) {
+                    parent.insertBefore(attackForm.nextElementSibling, attackForm);
+                    updateCardAttacks();
+                    updateAttackControls();
+                    saveDataToLocalStorage();
+                }
+            });
         }
 
+        function updateAttackControls() {
+            const forms = document.querySelectorAll('#attack-forms-container .attack-form');
+            forms.forEach((form, index) => {
+                form.querySelector('.move-attack-up').disabled = (index === 0);
+                form.querySelector('.move-attack-down').disabled = (index === forms.length - 1);
+            });
+        }
 
         // --- Card Preview Update Functions ---
 
@@ -1089,6 +1154,8 @@
                 cardName: document.getElementById('input-card-name'),
                 cardHp: document.getElementById('input-card-hp'),
                 cardAc: document.getElementById('input-card-ac'),
+                cardSave: document.getElementById('input-card-save'),
+                cardSave: document.getElementById('input-card-save'),
                 borderColor: document.getElementById('input-border-color'),
                 imageUpload: document.getElementById('input-image-upload'),
                 flavorText: document.getElementById('input-flavor-text'),
@@ -1110,6 +1177,11 @@
                 cardHpContainer: document.getElementById('card-hp-container'),
                 cardAc: document.getElementById('card-ac'),
                 cardAcContainer: document.getElementById('card-ac-container'),
+                cardSave: document.getElementById('card-save'),
+                cardSaveContainer: document.getElementById('card-save-container'),
+                cardSave: document.getElementById('card-save'),
+                cardSaveContainer: document.getElementById('card-save-container'),
+                acSaveSeparator: document.getElementById('ac-save-separator'),
                 imageArea: document.getElementById('card-image-area'),
                 flavorText: document.getElementById('card-flavor-text'),
                 attacks: document.getElementById('card-attacks-output'),
@@ -1149,12 +1221,31 @@
                 update(); 
             }
             
+            function updateAcSaveSeparator() {
+                if (!inputs.cardAc || !inputs.cardSave || !outputs.acSaveSeparator) return;
+                const acValue = inputs.cardAc.value;
+                const saveValue = inputs.cardSave.value;
+
+                if (acValue && saveValue) {
+                    outputs.acSaveSeparator.style.display = 'inline';
+                } else {
+                    outputs.acSaveSeparator.style.display = 'none';
+                }
+            }
+            
             bindText(inputs.creatureType, outputs.creatureType); 
             bindText(inputs.cardName, outputs.cardName);
             bindText(inputs.flavorText, outputs.flavorText);
             bindText(inputs.illustrator, outputs.illustrator);
             bindText(inputs.setName, outputs.setName); 
             bindText(inputs.cardNumber, outputs.cardNumber); 
+
+            if (outputs.cardNumber && inputs.cardNumber) {
+                outputs.cardNumber.addEventListener('input', () => {
+                    inputs.cardNumber.value = outputs.cardNumber.textContent;
+                    saveDataToLocalStorage();
+                });
+            }
             
             const updateHp = () => {
                 if (!inputs.cardHp || !outputs.cardHp || !outputs.cardHpContainer) return;
@@ -1170,9 +1261,20 @@
                 const value = inputs.cardAc.value;
                 outputs.cardAc.textContent = value;
                 outputs.cardAcContainer.style.display = value ? 'flex' : 'none';
+                updateAcSaveSeparator();
             };
             if(inputs.cardAc) inputs.cardAc.addEventListener('input', updateAc);
             updateAc();
+            
+            const updateSave = () => {
+                if (!inputs.cardSave || !outputs.cardSave || !outputs.cardSaveContainer) return;
+                const value = inputs.cardSave.value;
+                outputs.cardSave.textContent = value;
+                outputs.cardSaveContainer.style.display = value ? 'flex' : 'none';
+                updateAcSaveSeparator();
+            };
+            if(inputs.cardSave) { inputs.cardSave.addEventListener('input', updateSave); }
+            updateSave();
             
             if (inputs.borderColor && outputs.card) {
                 inputs.borderColor.addEventListener('input', () => {
@@ -1286,6 +1388,7 @@
             
             if (buttons.addAttack) buttons.addAttack.addEventListener('click', () => {
                 createAttackForm();
+                updateAttackControls();
                 saveDataToLocalStorage();
             });
             if (buttons.exportData) buttons.exportData.addEventListener('click', exportCardData);
@@ -1316,6 +1419,7 @@
                 });
             }
             updateCardAttacks();
+            updateAttackControls();
             updateCardTier();
             
             if (!dataLoaded) {
@@ -1333,5 +1437,3 @@
     </script>
 </body>
 </html>
-
-```
