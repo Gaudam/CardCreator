@@ -575,14 +575,14 @@
                                 <div>
                                     <label for="input-affinity-offset" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Attack Icons</label>
                                     <div class="flex items-center gap-2 mt-1">
-                                        <input type="number" id="input-affinity-offset" value="10" step="0.5" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <input type="number" id="input-affinity-offset" value="6" step="0.5" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         <span class="text-sm text-gray-500 dark:text-gray-400">px</span>
                                     </div>
                                 </div>
                                 <div>
                                     <label for="input-affinity-offset-basic" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Header/Name Icons</label>
                                     <div class="flex items-center gap-2 mt-1">
-                                        <input type="number" id="input-affinity-offset-basic" value="16" step="0.5" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <input type="number" id="input-affinity-offset-basic" value="12" step="0.5" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         <span class="text-sm text-gray-500 dark:text-gray-400">px</span>
                                     </div>
                                 </div>
@@ -815,8 +815,8 @@
             attacks.forEach(el => el.style.lineHeight = '16px');
 
             // 1.5. Fix Affinity Icon vertical alignment specifically for the downloaded canvas
-            const affinityOffset = document.getElementById('input-affinity-offset') ? document.getElementById('input-affinity-offset').value : '10';
-            const affinityOffsetBasic = document.getElementById('input-affinity-offset-basic') ? document.getElementById('input-affinity-offset-basic').value : '16';
+            const affinityOffset = document.getElementById('input-affinity-offset') ? document.getElementById('input-affinity-offset').value : '6';
+            const affinityOffsetBasic = document.getElementById('input-affinity-offset-basic') ? document.getElementById('input-affinity-offset-basic').value : '12';
             
             const affinityIcons = clonedCard.querySelectorAll('.affinity-icon');
             affinityIcons.forEach(icon => {
@@ -988,8 +988,8 @@
                 vignetteToggle: document.getElementById('input-vignette-toggle').checked,
                 setName: document.getElementById('input-set-name').value,
                 cardNumber: document.getElementById('input-card-number').value,
-                affinityOffset: document.getElementById('input-affinity-offset') ? document.getElementById('input-affinity-offset').value : '10',
-                affinityOffsetBasic: document.getElementById('input-affinity-offset-basic') ? document.getElementById('input-affinity-offset-basic').value : '16',
+                affinityOffset: document.getElementById('input-affinity-offset') ? document.getElementById('input-affinity-offset').value : '6',
+                affinityOffsetBasic: document.getElementById('input-affinity-offset-basic') ? document.getElementById('input-affinity-offset-basic').value : '12',
             };
 
             const imageControls = {
@@ -1043,10 +1043,10 @@
             document.getElementById('input-set-name').value = data.setName || 'Set Name';
             document.getElementById('input-card-number').value = data.cardNumber || '1/100';
             if (document.getElementById('input-affinity-offset')) {
-                document.getElementById('input-affinity-offset').value = data.affinityOffset !== undefined ? data.affinityOffset : '10';
+                document.getElementById('input-affinity-offset').value = data.affinityOffset !== undefined ? data.affinityOffset : '6';
                         }
             if (document.getElementById('input-affinity-offset-basic')) {
-                document.getElementById('input-affinity-offset-basic').value = data.affinityOffsetBasic !== undefined ? data.affinityOffsetBasic : '16'
+                document.getElementById('input-affinity-offset-basic').value = data.affinityOffsetBasic !== undefined ? data.affinityOffsetBasic : '12'
             }
 
             const imageArea = document.getElementById('card-image-area');
