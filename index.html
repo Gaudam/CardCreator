@@ -729,6 +729,18 @@
         'psychic': '',
         'radiant': '',
         'shadow': '',
+        'blood': '',
+        'bones': '',
+        'chaos': '',
+        'crystal': '',
+        'dragon': '',
+        'earth': '',
+        'gravity': '',
+        'holy': '',
+        'sand': '',
+        'spirit': '',
+        'time': '',
+        'void': '',
         'true': ''
     };
 
@@ -738,7 +750,7 @@
             
             text = escapeHtml(text);
             
-            const affinities = ['arcane', 'cold', 'dark', 'fire', 'lightning', 'nature', 'natuer', 'physical', 'poison', 'psychic', 'radiant', 'shadow', 'true'];
+            const affinities = ['arcane', 'cold', 'dark', 'fire', 'lightning', 'nature', 'natuer', 'physical', 'poison', 'psychic', 'radiant', 'shadow', 'true', 'blood', 'bones', 'chaos', 'crystal', 'dragon', 'earth', 'gravity', 'holy', 'sand', 'spirit', 'time', 'void'];
             
             return text.replace(/\[(.*?)\]/gi, (match, p1) => {
                 const affinity = p1.toLowerCase();
@@ -1653,7 +1665,7 @@
                 if (!display || !clearBtn) return;
                 display.innerHTML = '';
                 let hasAny = false;
-                const affinitiesList = ['arcane', 'cold', 'dark', 'fire', 'lightning', 'nature', 'physical', 'poison', 'psychic', 'radiant', 'shadow', 'true'];
+                const affinitiesList = ['arcane', 'cold', 'dark', 'fire', 'lightning', 'nature', 'physical', 'poison', 'psychic', 'radiant', 'shadow', 'true', 'blood', 'bones', 'chaos', 'crystal', 'dragon', 'earth', 'gravity', 'holy', 'sand', 'spirit', 'time', 'void'];
                 
                 affinitiesList.forEach(aff => {
                     const data = localStorage.getItem('affinity_icon_' + aff);
@@ -1693,7 +1705,7 @@
             const clearAffBtn = document.getElementById('clear-affinities-btn');
             if (clearAffBtn) {
                 clearAffBtn.addEventListener('click', () => {
-                    const affinitiesList = ['arcane', 'cold', 'dark', 'fire', 'lightning', 'nature', 'physical', 'poison', 'psychic', 'radiant', 'shadow', 'true'];
+                    const affinitiesList = ['arcane', 'cold', 'dark', 'fire', 'lightning', 'nature', 'physical', 'poison', 'psychic', 'radiant', 'shadow', 'true', 'blood', 'bones', 'chaos', 'crystal', 'dragon', 'earth', 'gravity', 'holy', 'sand', 'spirit', 'time', 'void'];
                     affinitiesList.forEach(aff => localStorage.removeItem('affinity_icon_' + aff));
                     loadSavedAffinities();
                     updateCardAttacks();
