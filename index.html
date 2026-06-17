@@ -744,7 +744,7 @@
         'true': ''
     };
 
-        function parseTextWithAffinities(text) {
+        function parseTextWithAffinities(text, options = {}) {
             if (typeof text !== 'string') text = String(text || '');
             if (!text) return '';
             
@@ -752,7 +752,7 @@
             
             const affinities = ['arcane', 'cold', 'dark', 'fire', 'lightning', 'nature', 'natuer', 'physical', 'poison', 'psychic', 'radiant', 'shadow', 'true', 'blood', 'bones', 'chaos', 'crystal', 'dragon', 'earth', 'gravity', 'holy', 'sand', 'spirit', 'time', 'void'];
             
-            return text.replace(/\[(.*?)\]/gi, (match, p1) => {
+            let processedText = text.replace(/\[(.*?)\]/gi, (match, p1) => {
                 const affinity = p1.toLowerCase();
                 if (affinities.includes(affinity)) {
                     let key = affinity === 'natuer' ? 'nature' : affinity;
@@ -765,6 +765,12 @@
                 }
                 return match;
             });
+
+            if (options.boldPassive) {
+                processedText = processedText.replace(/\b(Passive|Deathrattle)\b/gi, '<b>$1</b>');
+            }
+
+            return processedText;
         }
 
         // --- Mobile Layout Scaling Logic ---
@@ -1263,9 +1269,9 @@
 
             forms.forEach((form, index) => {
                 const inputs = form.querySelectorAll('input, textarea');
-                const name = parseTextWithAffinities(inputs[0].value);
-                const desc = parseTextWithAffinities(inputs[1].value).replace(/\n/g, '<br>');
-                const damage = parseTextWithAffinities(inputs[2].value);
+                const name = parseTextWithAffinities(inputs[0].value, { boldPassive: true });
+                const desc = parseTextWithAffinities(inputs[1].value, { boldPassive: true }).replace(/\n/g, '<br>');
+                const damage = parseTextWithAffinities(inputs[2].value, { boldPassive: true });
 
                 const attackEl = document.createElement('div');
                 attackEl.className = 'attack';
