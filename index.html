@@ -138,9 +138,20 @@
             font-size: 28px; 
             margin-left: 2px;
         }
+
+        /* Adjust AC and Save text height (size) here */
         #card-ac-container .font-card-title, #card-save-container .font-card-title {
-            font-size: 28px; 
+            font-size: 28px; /* Change number size (e.g. 24px, 32px) */
             margin-left: 2px;
+        }
+        #card-ac-container .font-stat-label, #card-save-container .font-stat-label, #ac-save-separator {
+            font-size: 28px; /* Change label ("AC", "SAVE", "|") size */
+        }
+
+        /* Adjust AC and Save text placement (move up or down) */
+        #card-ac-container, #card-save-container, #ac-save-separator {
+            position: relative;
+            top: 2px; /* Change to 5px to move down, or -5px to move up */
         }
 
         #card-hp-container .font-creature-type {
