@@ -13,15 +13,17 @@
         }
     </script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Locked in html-to-image for maximum quality. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
 
     <link rel="icon" type="image/x-icon" href="icon2.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Sofia Sans Condensed:wght@400;700&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Sofia+Sans+Condensed:wght@400;700&display=swap" rel="stylesheet" crossorigin="anonymous">
    
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Sofia+Sans+Condensed:wght@400;700&display=swap');
+
         /* --- Base & Dark Mode --- */
         body {
             font-family: 'Inter', sans-serif;
@@ -44,33 +46,33 @@
             text-shadow: 1px 1px 3px #000, -1px -1px 3px #000, 1px -1px 3px #000, -1px 1px 3px #000;
             font-size: 28px; 
             color: white;
-            line-height: 4px; /* Forced line height to prevent html2canvas stretching */
+            line-height: 28px; /* Normalized line-height */
             margin: 0;
         }
         
         .card-main-name-container {
             position: absolute;
-            top: 46px; 
+            top: 42px; /* Perfect clearance below header */
             left: 12px; 
             right: 12px; 
             z-index: 2;
         }
 
         .font-creature-type {
-            font-family: 'Sofia Sans Condensed', cursive; 
+            font-family: 'Sofia Sans Condensed', sans-serif; 
             text-shadow: 1px 1px 3px #000, -1px -1px 3px #000, 1px -1px 3px #000, -1px 1px 3px #000;
             font-size: 28px;
             color: white;
-            line-height: 26px;
+            line-height: 28px; /* Standardized */
             margin: 0;
         }
 
         .font-stat-label {
-            font-family: 'Sofia Sans Condensed', cursive; 
+            font-family: 'Sofia Sans Condensed', sans-serif; 
             text-shadow: 1px 1px 2px #000, -1px -1px 2px #000, 1px -1px 2px #000, -1px 1px 2px #000;
             font-size: 28px;
             color: white;
-            line-height: 32px;
+            line-height: 28px; /* Standardized */
             margin: 0;
         }
         
@@ -255,13 +257,13 @@
          /* --- Affinity Icons --- */
         .affinity-icon {
             display: inline-block;
-            height: 20px; /* Change this value (e.g., 1.5em, 0.8em) to adjust the size */
+            height: 20px;
             width: auto;
             vertical-align: middle;
-            margin-top: -0.4em; /* Tweak this slightly to keep the icon vertically centered */
-            margin-bottom: -0.3em; /* Negative bottom margin stops it from expanding the line height */
+            margin-top: -0.4em;
+            margin-bottom: -0.3em;
             margin-left: 2px;
-            margin-right: 2px; /* Small spacing so it doesn't touch the text */
+            margin-right: 2px;
         }
         
         /* --- ATTACK STYLING --- */
@@ -360,7 +362,7 @@
         /* Adjust the font size specifically for BUY and SELL labels and values here */
         #card-economic-bar .font-stat-label,
         #card-economic-bar .font-card-title {
-            font-size: 20px; 
+            font-size: 18px; 
         }
         
         .card-footer-item {
@@ -547,7 +549,7 @@
 
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
                         <legend class="text-lg font-semibold px-2 text-gray-600 dark:text-gray-300">Affinity Icons Setup</legend>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Getting download errors? Upload your affinity icons (Fire.png, etc.) here. They will be saved to your browser so you can download securely!</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Upload your affinity icons (Fire.png, etc.) here. They will be saved to your browser so you can use them safely!</p>
                         <div>
                             <input type="file" id="input-affinity-uploads" multiple accept="image/*" class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 dark:file:bg-indigo-900 file:text-indigo-700 dark:file:text-indigo-300 hover:file:bg-indigo-100 dark:hover:file:bg-indigo-800">
                         </div>
@@ -568,26 +570,6 @@
                         <button type="button" id="add-attack-btn" class="mt-4 w-full inline-flex justify-center rounded-md border border-dashed border-gray-400 dark:border-gray-500 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700">
                             + Add Attack
                         </button>
-                        <div class="mt-6 border-t dark:border-gray-600 pt-4">
-                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">Icon Vertical Offsets (Download Only)</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Adjust these separately if icons look misaligned in the downloaded PNG.</p>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label for="input-affinity-offset" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Attack Icons</label>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <input type="number" id="input-affinity-offset" value="6" step="0.5" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                        <span class="text-sm text-gray-500 dark:text-gray-400">px</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label for="input-affinity-offset-basic" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Header/Name Icons</label>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <input type="number" id="input-affinity-offset-basic" value="12" step="0.5" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                        <span class="text-sm text-gray-500 dark:text-gray-400">px</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </fieldset>
                     
                     <fieldset class="border dark:border-gray-600 p-4 rounded-md">
@@ -702,7 +684,7 @@
         let uploadedImageUrl = null;
         let attackCounter = 0;
 
-        // --- Element References (filled on DOMContentLoaded) ---
+        // --- Element References ---
         let inputs, outputs, buttons, imageControls;
 
         // --- Utility Functions ---
@@ -715,34 +697,14 @@
                 .replace(/'/g, "&#039;");
         }
 
-    // --- Base64 Affinity Icons ---
-    // To bypass local file browser security, you can paste the Base64 encoded strings of your PNGs here.
-    const affinityImages = {
-        'arcane': '',
-        'cold': '',
-        'dark': '',
-        'fire': '',
-        'lightning': '',
-        'nature': '',
-        'physical': '',
-        'poison': '',
-        'psychic': '',
-        'radiant': '',
-        'shadow': '',
-        'blood': '',
-        'bones': '',
-        'chaos': '',
-        'crystal': '',
-        'dragon': '',
-        'earth': '',
-        'gravity': '',
-        'holy': '',
-        'sand': '',
-        'spirit': '',
-        'time': '',
-        'void': '',
-        'true': ''
-    };
+        // --- Base64 Affinity Icons ---
+        const affinityImages = {
+            'arcane': '', 'cold': '', 'dark': '', 'fire': '', 'lightning': '',
+            'nature': '', 'physical': '', 'poison': '', 'psychic': '', 'radiant': '',
+            'shadow': '', 'blood': '', 'bones': '', 'chaos': '', 'crystal': '',
+            'dragon': '', 'earth': '', 'gravity': '', 'holy': '', 'sand': '',
+            'spirit': '', 'time': '', 'void': '', 'true': ''
+        };
 
         function parseTextWithAffinities(text, options = {}) {
             if (typeof text !== 'string') text = String(text || '');
@@ -758,7 +720,6 @@
                     let key = affinity === 'natuer' ? 'nature' : affinity;
                     let imgName = key.charAt(0).toUpperCase() + key.slice(1);
                     
-                    // 1. Check LocalStorage (Uploaded via Setup) 2. Check Base64 Dict 3. Fallback to local file
                     let savedBase64 = localStorage.getItem('affinity_icon_' + key);
                     let src = savedBase64 || affinityImages[key] || `${imgName}.png`;
                     return `<img src="${src}" class="affinity-icon" alt="[${imgName}]">`;
@@ -774,17 +735,11 @@
         }
 
         // --- Mobile Layout Scaling Logic ---
-        
-        /**
-         * Uses CSS transforms to gracefully scale the card wrapper down on smaller screens.
-         * Ensures the internal structure (fonts, positions, wrapping) never breaks!
-         */
         function updateCardScale() {
             const wrapper = document.getElementById('card-scale-wrapper');
             const card = document.getElementById('card-preview');
             if (!wrapper || !card) return;
 
-            // Compute available parent width with some padding
             const parentWidth = wrapper.parentElement.clientWidth;
             const availableWidth = parentWidth - 16; 
             const cardNativeWidth = 380;
@@ -793,7 +748,6 @@
             if (availableWidth < cardNativeWidth) {
                 const scale = availableWidth / cardNativeWidth;
                 card.style.transform = `scale(${scale})`;
-                // Collapse the wrapper height to match the scaled visual bounds
                 wrapper.style.height = `${cardNativeHeight * scale}px`;
             } else {
                 card.style.transform = 'none';
@@ -801,155 +755,91 @@
             }
         }
         
-        // Ensure UI scaling recalculates on screen resize
         window.addEventListener('resize', updateCardScale);
 
 
         // --- Card Download Functions ---
-
+        
         /**
-         * Helper function to ensure perfect 1:1 replication in html2canvas.
+         * Ensures fonts are fully embedded and bypasses the pixelRatio scaling bug.
          */
-        const applyHtml2CanvasFixes = (clonedDoc) => {
-            const clonedCard = clonedDoc.getElementById('card-preview');
-            if (!clonedCard) return;
+        async function captureCard(scaleMultiplier) {
+            const wrapper = document.getElementById('card-scale-wrapper');
+            const cardElement = document.getElementById('card-preview');
+            await document.fonts.ready;
 
-            // 0. RESET SCALING for canvas generation.
-            // Even if the visual UI is scaled down for a mobile screen, the screenshot
-            // should always render in full native 1:1 scale!
-            clonedCard.style.transform = 'none';
+            // Save original scaling state
+            const originalTransform = cardElement.style.transform;
+            const originalHeight = wrapper.style.height;
 
-            // 1. Fix line heights that cause vertical text misalignment in html2canvas
-            const creatureTypes = clonedCard.querySelectorAll('.font-creature-type');
-            creatureTypes.forEach(el => el.style.lineHeight = '26px');
+            // UN-SCALE LIVE: Force to native 1:1 layout before capture
+            cardElement.style.transform = 'none';
+            wrapper.style.height = '531px';
 
-            const hpAcText = clonedDoc.querySelectorAll('#card-hp-container, #card-ac-container, #card-save-container, #card-buy-container, #card-sell-container');
-            hpAcText.forEach(el => el.style.lineHeight = '26px');
-            
-            const cardName = clonedCard.querySelector('#card-name');
-            if (cardName) cardName.style.lineHeight = '0px';
+            // Wait a brief moment for the browser to strictly reflow the fonts natively
+            await new Promise(resolve => setTimeout(resolve, 50));
 
-            const attacks = clonedCard.querySelectorAll('.attack-name, .attack-damage');
-            attacks.forEach(el => el.style.lineHeight = '16px');
-
-            // 1.5. Fix Affinity Icon vertical alignment specifically for the downloaded canvas
-            const affinityOffset = document.getElementById('input-affinity-offset') ? document.getElementById('input-affinity-offset').value : '6';
-            const affinityOffsetBasic = document.getElementById('input-affinity-offset-basic') ? document.getElementById('input-affinity-offset-basic').value : '12';
-            
-            const affinityIcons = clonedCard.querySelectorAll('.affinity-icon');
-            affinityIcons.forEach(icon => {
-                // Use position relative to move the icon without expanding the line height
-                icon.style.position = 'relative';
-                icon.style.marginTop = '0px';
-                icon.style.marginBottom = '0px';
-
-                if (icon.closest('.card-attacks')) {
-                    icon.style.top = `${affinityOffset}px`;
-                } else {
-                    icon.style.top = `${affinityOffsetBasic}px`;
+            // Generate perfect image natively using pixelRatio (Fonts are now guaranteed to load)
+            const dataUrl = await htmlToImage.toPng(cardElement, {
+                pixelRatio: scaleMultiplier,
+                style: {
+                    transform: 'none',
+                    transformOrigin: 'top left',
+                    margin: '0'
                 }
             });
 
-            // 2. The Ultimate Border Fix
-            const originalBorderColor = clonedCard.style.borderColor || '#f9d71c';
-            clonedCard.style.border = 'none';
-            clonedCard.style.padding = '12px'; // Replaces the 12px border constraint for normal flow elements
+            // RESTORE LIVE SCALE
+            cardElement.style.transform = originalTransform;
+            wrapper.style.height = originalHeight;
 
-            // 3. Add a fake visual border so it still looks perfect
-            const fakeBorder = clonedDoc.createElement('div');
-            fakeBorder.style.position = 'absolute';
-            fakeBorder.style.top = '0';
-            fakeBorder.style.left = '0';
-            fakeBorder.style.right = '0';
-            fakeBorder.style.bottom = '0';
-            fakeBorder.style.border = `12px solid ${originalBorderColor}`;
-            fakeBorder.style.borderRadius = '18px';
-            fakeBorder.style.pointerEvents = 'none';
-            fakeBorder.style.zIndex = '50';
-            clonedCard.appendChild(fakeBorder);
+            return dataUrl;
+        }
 
-            // 4. Adjust absolute elements to account for the removed 12px border expansion
-            const header = clonedCard.querySelector('.card-header');
-            if (header) {
-                header.style.top = '6px'; // 7 + 12
-                header.style.left = '12px'; // 0 + 12
-                header.style.right = '12px'; // 0 + 12
-            }
-            
-            const nameContainer = clonedCard.querySelector('.card-main-name-container');
-            if (nameContainer) {
-                // --- AUTOMATED TOP POSITION FIX ---
-                // Read the live 'top' value from the on-screen card.
-                const liveNameContainer = document.querySelector('#card-preview .card-main-name-container');
-                const liveTop = window.getComputedStyle(liveNameContainer).getPropertyValue('top');
-                const liveTopValue = parseFloat(liveTop); // e.g., 48
-                
-                // Apply the 10px offset for html2canvas rendering.
-                nameContainer.style.top = `${liveTopValue - 2}px`; 
-                
-                nameContainer.style.left = '24px';
-                nameContainer.style.right = '24px';
-            }
-            
-            const footer = clonedCard.querySelector('.card-footer');
-            if (footer) {
-                footer.style.bottom = '12px'; // 0 + 12
-                footer.style.left = '12px'; // 0 + 12
-                footer.style.right = '12px'; // 0 + 12
-            }
-
-            const overlays = clonedCard.querySelectorAll('.card-top-overlay, .card-bottom-overlay, .card-vignette-overlay, .card-image-area');
-            overlays.forEach(el => {
-                el.style.top = '0px';    // -2 + 12
-                el.style.left = '10px';   // -2 + 12
-                el.style.right = '10px';  // -2 + 12
-                el.style.bottom = '2px';  // -10 + 12
-            });
-        };
-
-        /**
-         * Downloads the card preview as a standard, high-resolution PNG.
-         */
-        function downloadCard() {
-            const cardElement = document.getElementById('card-preview');
+        async function downloadCard() {
             const downloadBtn = document.getElementById('download-btn');
             
             downloadBtn.disabled = true;
             downloadBtn.textContent = 'Preparing...';
 
-            html2canvas(cardElement, {
-                useCORS: true, 
-                scale: 2, // High-res for web
-                backgroundColor: null,
-                onclone: applyHtml2CanvasFixes
-            }).then(canvas => {
+            try {
+                // Generate 4x high-res canvas (1520x2124)
+                const dataUrl = await captureCard(4);
+                
                 const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/png');
-                link.download = 'my-custom-card.png';
+                link.href = dataUrl;
+                const name = document.getElementById('input-card-name').value || 'custom-card';
+                link.download = `${name}.png`;
                 
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-            }).catch(err => {
+            } catch (err) {
                 console.error("Failed to download card:", err);
                 alert("Failed to download card. Check console for details.");
-            }).finally(() => {
+            } finally {
                 downloadBtn.disabled = false;
                 downloadBtn.textContent = 'Download Card (Web PNG)';
-            });
+            }
         }
         
-        /**
-         * Downloads a 822x1122 print-ready file *with* the card's border visible.
-         */
         async function downloadCardForPrint() {
-            const cardElement = document.getElementById('card-preview');
             const printBtn = document.getElementById('download-print-btn');
     
             printBtn.disabled = true;
             printBtn.textContent = 'Preparing Print File...';
 
             try {
+                // 2x scale mapping for the print canvas (760x1062)
+                const dataUrl = await captureCard(2);
+
+                const img = new Image();
+                img.src = dataUrl;
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                });
+
                 const printCanvas = document.createElement('canvas');
                 printCanvas.width = 822;
                 printCanvas.height = 1122;
@@ -960,18 +850,12 @@
                 ctx.fillStyle = borderColor;
                 ctx.fillRect(0, 0, 822, 1122);
                 
-                const cardCanvas = await html2canvas(cardElement, {
-                    useCORS: true,
-                    scale: 2,
-                    backgroundColor: null,
-                    onclone: applyHtml2CanvasFixes
-                });
-
-                ctx.drawImage(cardCanvas, 36, 36, 750, 1050);
+                ctx.drawImage(img, 36, 36, 750, 1050);
 
                 const link = document.createElement('a');
-                link.href = printCanvas.toDataURL('image/png');
-                link.download = 'my-card-PRINT-822x1122.png';
+                link.href = printCanvas.toDataURL('image/png', 1.0);
+                const name = document.getElementById('input-card-name').value || 'custom-card';
+                link.download = `${name}-PRINT-822x1122.png`;
                 
                 document.body.appendChild(link);
                 link.click();
@@ -979,13 +863,12 @@
 
             } catch (err) {
                 console.error("Failed to download print-ready card:", err);
-                alert("Failed to create print file. Check console for details.");
+                alert("Failed to create print file.");
             } finally {
                 printBtn.disabled = false;
                 printBtn.textContent = 'Download for Print';
             }
         }
-
 
         // --- Data Import/Export & LocalStorage ---
 
@@ -1005,9 +888,7 @@
                 overlayColor: document.getElementById('input-overlay-color').value,
                 vignetteToggle: document.getElementById('input-vignette-toggle').checked,
                 setName: document.getElementById('input-set-name').value,
-                cardNumber: document.getElementById('input-card-number').value,
-                affinityOffset: document.getElementById('input-affinity-offset') ? document.getElementById('input-affinity-offset').value : '6',
-                affinityOffsetBasic: document.getElementById('input-affinity-offset-basic') ? document.getElementById('input-affinity-offset-basic').value : '12',
+                cardNumber: document.getElementById('input-card-number').value
             };
 
             const imageControls = {
@@ -1060,12 +941,6 @@
             document.getElementById('input-vignette-toggle').checked = data.vignetteToggle || false;
             document.getElementById('input-set-name').value = data.setName || 'Set Name';
             document.getElementById('input-card-number').value = data.cardNumber || '1/100';
-            if (document.getElementById('input-affinity-offset')) {
-                document.getElementById('input-affinity-offset').value = data.affinityOffset !== undefined ? data.affinityOffset : '6';
-                        }
-            if (document.getElementById('input-affinity-offset-basic')) {
-                document.getElementById('input-affinity-offset-basic').value = data.affinityOffsetBasic !== undefined ? data.affinityOffsetBasic : '12'
-            }
 
             const imageArea = document.getElementById('card-image-area');
             if (data.cardImage && data.cardImage !== 'none') {
@@ -1104,12 +979,7 @@
             document.getElementById('input-vignette-toggle').dispatchEvent(new Event('change'));
             document.getElementById('input-set-name').dispatchEvent(new Event('input'));
             document.getElementById('input-card-number').dispatchEvent(new Event('input'));
-            if (document.getElementById('input-affinity-offset')) {
-                document.getElementById('input-affinity-offset').dispatchEvent(new Event('input'));
-            }
-             if (document.getElementById('input-affinity-offset-basic')) {
-                document.getElementById('input-affinity-offset-basic').dispatchEvent(new Event('input'));
-            }
+            
             updateImageTransform();
             updateCardAttacks();
             updateAttackControls();
@@ -1345,11 +1215,6 @@
                 cardSave: document.getElementById('input-card-save'),
                 cardBuy: document.getElementById('input-card-buy'),
                 cardSell: document.getElementById('input-card-sell'),
-                cardBuy: document.getElementById('input-card-buy'),
-                cardSell: document.getElementById('input-card-sell'),
-                cardBuy: document.getElementById('input-card-buy'),
-                cardSell: document.getElementById('input-card-sell'),
-                cardSave: document.getElementById('input-card-save'),
                 borderColor: document.getElementById('input-border-color'),
                 imageUpload: document.getElementById('input-image-upload'),
                 flavorText: document.getElementById('input-flavor-text'),
@@ -1358,8 +1223,6 @@
                 vignetteToggle: document.getElementById('input-vignette-toggle'), 
                 setName: document.getElementById('input-set-name'), 
                 cardNumber: document.getElementById('input-card-number'), 
-                affinityOffset: document.getElementById('input-affinity-offset'),
-                affinityOffsetBasic: document.getElementById('input-affinity-offset-basic'),
                 imageZoom: document.getElementById('image-zoom'),
                 imagePosX: document.getElementById('image-pos-x'),
                 imagePosY: document.getElementById('image-pos-y'),
@@ -1377,8 +1240,6 @@
                 cardSell: document.getElementById('card-sell'),
                 cardSellContainer: document.getElementById('card-sell-container'),
                 cardAcContainer: document.getElementById('card-ac-container'),
-                cardSave: document.getElementById('card-save'),
-                cardSaveContainer: document.getElementById('card-save-container'),
                 cardSave: document.getElementById('card-save'),
                 cardSaveContainer: document.getElementById('card-save-container'),
                 acSaveSeparator: document.getElementById('ac-save-separator'),
@@ -1477,6 +1338,7 @@
             };
             if(inputs.cardAc) inputs.cardAc.addEventListener('input', updateAc);
             updateAc();
+
             const updateBuy = () => {
                 if (!inputs.cardBuy || !outputs.cardBuy || !outputs.cardBuyContainer) return;
                 const value = inputs.cardBuy.value;
@@ -1496,7 +1358,7 @@
             };
             if(inputs.cardSell) inputs.cardSell.addEventListener('input', updateSell);
             updateSell();
-            // No direct output for Buy/Sell on card, just save data
+            
             if(inputs.cardBuy) inputs.cardBuy.addEventListener('input', saveDataToLocalStorage);
             if(inputs.cardSell) inputs.cardSell.addEventListener('input', saveDataToLocalStorage);
 
