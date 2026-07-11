@@ -19,7 +19,7 @@
     <link rel="icon" type="image/x-icon" href="icon2.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Sofia+Sans+Condensed:wght@400;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Sofia+Sans+Condensed:wght@400;700&display=swap" rel="stylesheet" crossorigin="anonymous">
    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Sofia+Sans+Condensed:wght@400;700&display=swap');
@@ -381,6 +381,31 @@
             
         }
         
+        /* --- Border Disable Compensation --- */
+        /* 
+           These classes lock the text and layout in the EXACT visual location 
+           they occupied before the border was disabled, stopping the "outward moving" effect. 
+        */
+        .card.no-border {
+            border-width: 0px !important;
+            padding: 12px !important; /* Forces internal flex elements to stay indented */
+        }
+        .card.no-border .card-header {
+            top: 16px !important; /* Shift down 12px */
+            left: 12px !important; /* Shift right 12px */
+            right: 12px !important; /* Shift left 12px */
+        }
+        .card.no-border .card-main-name-container {
+            top: 34px !important; /* Shift down 12px */
+            left: 24px !important; /* Shift right 12px */
+            right: 24px !important; /* Shift left 12px */
+        }
+        .card.no-border .card-footer {
+            bottom: 12px !important; /* Shift up 12px */
+            left: 12px !important; /* Shift right 12px */
+            right: 12px !important; /* Shift left 12px */
+        }
+
         /* --- Utility Classes (Loader, Modal) --- */
         .loader {
             width: 48px;
@@ -1157,6 +1182,7 @@
                 form.querySelector('.move-attack-down').disabled = (index === forms.length - 1);
             });
         }
+        
         function updateOverlayVisibility() {
             const disableAll = inputs.disableGradientsToggle ? inputs.disableGradientsToggle.checked : false;
             const useVignette = inputs.vignetteToggle ? inputs.vignetteToggle.checked : false;
@@ -1216,7 +1242,6 @@
             });
         }
         
-        // This is the fully repaired math allowing buttery-smooth image panning at any zoom level
         function updateImageTransform() {
             if (!inputs.imageZoom || !inputs.imagePosX || !inputs.imagePosY || !outputs.imageArea || !outputs.zoomValue || !outputs.posXValue || !outputs.posYValue) return;
             
@@ -1462,7 +1487,7 @@
                 return `rgba(${r}, ${g}, ${b}, ${a})`;
             }
 
-            // Fixed logic: Hiding border natively extends the space without needing structural layout changes
+            // Fixed logic: Applying '.no-border' class properly expands space without breaking component coordinates 
             function updateBorder() {
                 if (!inputs.borderColor || !outputs.card || !inputs.disableBorderToggle) return;
 
@@ -1477,7 +1502,8 @@
                 ].filter(el => el);
 
                 if (disableBorder) {
-                    outputs.card.style.borderWidth = '0px';
+                    outputs.card.classList.add('no-border');
+                    outputs.card.style.borderWidth = '0px'; 
                     outputs.card.style.background = 'transparent'; 
                     
                     overlays.forEach(el => {
@@ -1487,6 +1513,7 @@
                         el.style.bottom = '0px';
                     });
                 } else {
+                    outputs.card.classList.remove('no-border');
                     outputs.card.style.borderWidth = '12px';
                     outputs.card.style.borderColor = selectedColor;
                     outputs.card.style.background = '#000000';
