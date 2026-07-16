@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" id="html-root">
+<html lang="en" id="html-root" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,17 +27,6 @@
         /* --- Base & Dark Mode --- */
         body {
             font-family: 'Inter', sans-serif;
-        }
-
-        .toggle-checkbox:checked {
-            background-color: #4f46e5;
-            right: 0;
-        }
-        .toggle-checkbox:checked + .toggle-label {
-            background-color: #4f46e5;
-        }
-        .toggle-checkbox:checked + .toggle-label .toggle-ball {
-            transform: translateX(100%);
         }
 
         /* --- Card Typography --- */
@@ -300,6 +289,13 @@
             text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
         }
 
+        .attack-type-label {
+            font-weight: 400;
+            font-style: italic;
+            opacity: 0.85;
+            margin-right: 4px;
+        }
+
         .attack-description {
             font-family: 'Inter', sans-serif;
             font-weight: 400;
@@ -461,24 +457,7 @@
     
     <div class="max-w-7xl mx-auto">
         <div class="flex flex-col sm:flex-row justify-center sm:justify-between items-center mb-8 relative">
-            <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-4 sm:mb-0">Custom Card Creator</h1>
-            
-            <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                </span>
-                <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                    <input type="checkbox" name="dark-mode-toggle" id="dark-mode-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
-                    <label for="dark-mode-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                </div>
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                    </svg>
-                </span>
-            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-100 mb-4 sm:mb-0">Custom Card Creator</h1>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -954,31 +933,19 @@
 
             const attacks = [];
             document.querySelectorAll('#attack-forms-container .attack-form').forEach(form => {
-                const formInputs = form.querySelectorAll('input, textarea');
                 attacks.push({
-                    name: formInputs[0].value,
-                    desc: formInputs[1].value,
-                    damage: formInputs[2].value
+                    type: form.querySelector('.attack-type-select').value,
+                    name: form.querySelector('.attack-name-input').value,
+                    desc: form.querySelector('.attack-desc-input').value,
+                    damage: form.querySelector('.attack-damage-input').value
                 });
             });
 
-            const theme = {
-                darkMode: document.documentElement.classList.contains('dark')
-            };
-
-            return { ...inputs, ...imageControls, attacks, theme };
+            return { ...inputs, ...imageControls, attacks };
         }
 
         function populateForm(data) {
             if (!data) return;
-
-            if (data.theme?.darkMode) {
-                document.documentElement.classList.add('dark');
-                document.getElementById('dark-mode-toggle').checked = true;
-            } else {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('dark-mode-toggle').checked = false;
-            }
 
             document.getElementById('input-creature-type').value = data.creatureType ?? '';
             document.getElementById('input-card-tier').value = data.cardTier || 'Common';
@@ -1110,7 +1077,9 @@
             attackCounter++;
             const id = attackCounter;
             
+            // Destructuring handles missing data gracefully - Type will automatically default to 'Attack' during import!
             const {
+                type = 'Attack',
                 name = 'New Attack',
                 desc = 'Attack description.',
                 damage = ''
@@ -1128,17 +1097,27 @@
                     <button type="button" class="delete-attack-btn bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold" title="Delete Attack">&times;</button>
                 </div>
                 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
-                    <input type="text" value="${name}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
+                        <select class="attack-type-select mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
+                            <option value="Attack" ${type === 'Attack' ? 'selected' : ''}>Attack</option>
+                            <option value="Ability" ${type === 'Ability' ? 'selected' : ''}>Ability</option>
+                            <option value="Effect" ${type === 'Effect' ? 'selected' : ''}>Effect</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+                        <input type="text" value="${name}" class="attack-name-input mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                    <textarea rows="2" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">${desc}</textarea>
+                    <textarea rows="2" class="attack-desc-input mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">${desc}</textarea>
                 </div>
                 <div class="attack-damage-field">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Damage</label>
-                    <input type="text" value="${damage}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
+                    <input type="text" value="${damage}" class="attack-damage-input mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm sm:text-sm">
                 </div>
             `;
 
@@ -1151,7 +1130,7 @@
                 saveDataToLocalStorage();
             });
             
-            attackForm.querySelectorAll('input, textarea').forEach(el => {
+            attackForm.querySelectorAll('.attack-type-select, .attack-name-input, .attack-desc-input, .attack-damage-input').forEach(el => {
                 el.addEventListener('input', () => {
                     updateCardAttacks();
                     saveDataToLocalStorage();
@@ -1216,10 +1195,14 @@
             outputContainer.innerHTML = '';
 
             forms.forEach((form, index) => {
-                const inputs = form.querySelectorAll('input, textarea');
-                const name = parseTextWithAffinities(inputs[0].value, { boldPassive: true });
-                const desc = parseTextWithAffinities(inputs[1].value, { boldPassive: true }).replace(/\n/g, '<br>');
-                const damage = parseTextWithAffinities(inputs[2].value, { boldPassive: true });
+                const typeValue = form.querySelector('.attack-type-select').value;
+                const nameValue = form.querySelector('.attack-name-input').value;
+                const descValue = form.querySelector('.attack-desc-input').value;
+                const damageValue = form.querySelector('.attack-damage-input').value;
+
+                const name = parseTextWithAffinities(nameValue, { boldPassive: true });
+                const desc = parseTextWithAffinities(descValue, { boldPassive: true }).replace(/\n/g, '<br>');
+                const damage = parseTextWithAffinities(damageValue, { boldPassive: true });
 
                 const attackEl = document.createElement('div');
                 attackEl.className = 'attack';
@@ -1296,7 +1279,6 @@
             }
         }
 
-        
         // --- Main Initialization (DOMContentLoaded) ---
         document.addEventListener('DOMContentLoaded', () => {
             
@@ -1364,7 +1346,6 @@
                 clearUpload: document.getElementById('clear-upload-btn'),
                 addAttack: document.getElementById('add-attack-btn'),
                 resetImage: document.getElementById('reset-image-btn'),
-                darkModeToggle: document.getElementById('dark-mode-toggle'),
                 exportData: document.getElementById('export-data-btn'),
                 importData: document.getElementById('import-data-btn')
             };
@@ -1630,11 +1611,6 @@
             if (buttons.exportData) buttons.exportData.addEventListener('click', exportCardData);
             if (buttons.importData) buttons.importData.addEventListener('change', importCardData);
 
-            if (buttons.darkModeToggle) buttons.darkModeToggle.addEventListener('change', () => {
-                document.documentElement.classList.toggle('dark');
-                saveDataToLocalStorage();
-            });
-
             Object.values(inputs).forEach(inputEl => {
                 if (inputEl) {
                     const eventType = ['checkbox', 'select-one'].includes(inputEl.type) ? 'change' : 'input';
@@ -1649,6 +1625,7 @@
 
             if (!dataLoaded) {
                 createAttackForm({
+                    type: 'Effect',
                     name: 'Data Stream',
                     desc: 'Flip a coin. If heads, draw 3 cards.',
                     damage: '20'
@@ -1658,12 +1635,6 @@
             updateAttackControls();
             updateCardTier();
             
-            if (!dataLoaded) {
-                document.documentElement.classList.add('dark');
-                if (buttons.darkModeToggle) buttons.darkModeToggle.checked = true;
-                saveDataToLocalStorage();
-            }
-
             // --- Affinity Icon Manager ---
             function loadSavedAffinities() {
                 const display = document.getElementById('loaded-affinities-display');
