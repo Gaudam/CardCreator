@@ -15,6 +15,7 @@
     
     <!-- Locked in html-to-image for maximum quality. -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js"></script>
 
     <link rel="icon" type="image/x-icon" href="/CardCreator/icon2.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -516,7 +517,7 @@
 
                             <div class="col-span-2 md:col-span-1">
                                 <label for="input-border-color" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Border Color</label>
-                                <input type="color" id="input-border-color" value="#f9d71c" class="mt-1 block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm">
+                                <input type="color" id="input-border-color" value="#000000" class="mt-1 block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm">
                             </div>
                             <div class="col-span-2">
                                 <label for="input-overlay-color" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Overlay Color (for gradients)</label>
@@ -877,7 +878,7 @@
                 ctx.imageSmoothingQuality = 'high';
 
                 // ALWAYS render the bleed border for print, exactly as requested
-                const borderColor = document.getElementById('input-border-color').value || '#f9d71c';
+                const borderColor = document.getElementById('input-border-color').value || '#000000';
                 ctx.fillStyle = borderColor;
                 ctx.fillRect(0, 0, 822, 1122);
                 
@@ -955,7 +956,7 @@
             document.getElementById('input-card-buy').value = data.cardBuy ?? '';
             document.getElementById('input-card-sell').value = data.cardSell ?? '';
             document.getElementById('input-card-save').value = data.cardSave ?? '';
-            document.getElementById('input-border-color').value = data.borderColor ?? '#f9d71c';
+            document.getElementById('input-border-color').value = data.borderColor ?? '#000000';
             document.getElementById('input-flavor-text').value = data.flavorText ?? '';
             document.getElementById('input-illustrator').value = data.illustrator ?? '';
             document.getElementById('input-overlay-color').value = data.overlayColor ?? '#000000';
@@ -1011,29 +1012,48 @@
             updateCardTier();
         }
 
-        function saveDataToLocalStorage() {
+        async function saveDataToLocalStorage() {
             try {
                 const data = getCurrentCardData();
+                
+                // Separate the heavy image from the lightweight config
+                const imageToSave = data.cardImage;
+                data.cardImage = null; // Remove from standard local storage
+
+                // Save lightweight text data normally
                 localStorage.setItem('customCardData', JSON.stringify(data));
+                
+                // Save the heavy image payload to IndexedDB
+                if (imageToSave && imageToSave !== 'none') {
+                await idbKeyval.set('cardCreatorImage', imageToSave);
+                } else {
+                await idbKeyval.del('cardCreatorImage');
+                }
             } catch (error) {
-                console.error("Failed to save data to localStorage:", error);
+                console.error("Failed to save data:", error);
             }
         }
 
-        function loadDataFromLocalStorage() {
+        async function loadDataFromLocalStorage() {
             const dataString = localStorage.getItem('customCardData');
             if (dataString) {
                 try {
-                    const data = JSON.parse(dataString);
-                    populateForm(data);
-                    return true; 
+                const data = JSON.parse(dataString);
+                
+                // Fetch the heavy image payload from IndexedDB
+                const savedImage = await idbKeyval.get('cardCreatorImage');
+                if (savedImage) {
+                    data.cardImage = savedImage;
+                }
+
+                populateForm(data);
+                return true;
                 } catch (error) {
-                    console.error("Failed to parse data from localStorage:", error);
-                    localStorage.removeItem('customCardData');
-                    return false;
+                console.error("Failed to parse data:", error);
+                return false;
                 }
             }
-            return false; 
+            return false;
         }
 
         function exportCardData() {
@@ -1623,18 +1643,19 @@
             
             const dataLoaded = loadDataFromLocalStorage();
 
-            if (!dataLoaded) {
-                createAttackForm({
+            loadDataFromLocalStorage().then(dataLoaded => {
+                if (!dataLoaded) {
+                    createAttackForm({
                     type: 'Effect',
                     name: 'Data Stream',
                     desc: 'Flip a coin. If heads, draw 3 cards.',
                     damage: '20'
-                });
-            }
-            updateCardAttacks();
-            updateAttackControls();
-            updateCardTier();
-            
+                    });
+                }
+                updateCardAttacks();
+                updateAttackControls();
+                updateCardTier();
+            });
             // --- Affinity Icon Manager ---
             function loadSavedAffinities() {
                 const display = document.getElementById('loaded-affinities-display');
