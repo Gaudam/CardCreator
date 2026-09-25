@@ -624,7 +624,7 @@
                     <button type="button" id="download-print-btn" class="mt-2 w-full inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:ring-offset-gray-800">
                         Download for Print
                     </button>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 text-center">Creates an 822x1122 print-ready file with a 36px bleed.</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 text-center">Creates a 1644x2244 print-ready file with a 72px bleed.</p>
                 </form>
             </div>
 
@@ -856,43 +856,42 @@
         
         async function downloadCardForPrint() {
             const printBtn = document.getElementById('download-print-btn');
-    
             printBtn.disabled = true;
             printBtn.textContent = 'Preparing Print File...';
 
             try {
-                // 2x scale mapping for the print canvas (760x1062)
-                const dataUrl = await captureCard(2);
-
+                // 1. Capture op 4x schaal (Hetzelfde als de Web PNG voor maximale kwaliteit)
+                const dataUrl = await captureCard(4);
                 const img = new Image();
                 img.src = dataUrl;
                 await new Promise((resolve, reject) => {
-                    img.onload = resolve;
-                    img.onerror = reject;
+                img.onload = resolve;
+                img.onerror = reject;
                 });
 
+                // 2. Het canvas moet fysiek groter worden om de pixels te behouden
                 const printCanvas = document.createElement('canvas');
-                printCanvas.width = 822;
-                printCanvas.height = 1122;
+                printCanvas.width = 1644;
+                printCanvas.height = 2244;
                 const ctx = printCanvas.getContext('2d');
                 ctx.imageSmoothingQuality = 'high';
 
-                // ALWAYS render the bleed border for print, exactly as requested
                 const borderColor = document.getElementById('input-border-color').value || '#000000';
                 ctx.fillStyle = borderColor;
-                ctx.fillRect(0, 0, 822, 1122);
-                
-                ctx.drawImage(img, 36, 36, 750, 1050);
+                ctx.fillRect(0, 0, 1644, 2244);
+
+                // 3. Teken de grote afbeelding op het grote canvas met de juiste bleed (72px)
+                ctx.drawImage(img, 72, 72, 1500, 2100);
 
                 const link = document.createElement('a');
                 link.href = printCanvas.toDataURL('image/png', 1.0);
                 const name = document.getElementById('input-card-name').value || 'custom-card';
-                link.download = `${name}-PRINT-822x1122.png`;
                 
+                // 4. Update de filenaam zodat je kan verifiëren of het script is geüpdatet
+                link.download = `${name}-PRINT-1644x2244.png`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-
             } catch (err) {
                 console.error("Failed to download print-ready card:", err);
                 alert("Failed to create print file.");
