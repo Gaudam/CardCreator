@@ -300,7 +300,7 @@
     .attack + .attack::before {
       content: "";
       position: absolute;
-      top: -4.5px;
+      top: -5px; /* Moved 2px higher to center between icons */
       left: 0;
       right: 0;
       height: 1px;
@@ -409,6 +409,49 @@
     ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
 
     .hidden-force { display: none !important; }
+
+    /* --- Collapsible Form Sections --- */
+fieldset.collapsible-section {
+    transition: padding 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+fieldset.collapsible-section > legend {
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    transition: all 0.15s ease;
+}
+
+fieldset.collapsible-section > legend:hover {
+    background: rgba(34, 211, 238, 0.15);
+    border-color: rgba(34, 211, 238, 0.5);
+    color: #67e8f9;
+}
+
+fieldset.collapsible-section > legend .collapse-chevron {
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+fieldset.collapsible-section.is-collapsed {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.45rem !important;
+    background-color: rgba(17, 24, 39, 0.25) !important;
+}
+
+fieldset.collapsible-section.is-collapsed > legend .collapse-chevron {
+    transform: rotate(-90deg);
+}
+
+fieldset.collapsible-section.is-collapsed > .fieldset-body {
+    display: none !important;
+}
   </style>
 </head>
 <body class="bg-[#0b0f19] text-gray-100 min-h-screen font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
@@ -428,66 +471,77 @@
   <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed bottom-5 right-5 z-[95] flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
-  <!-- Top Studio Navigation Bar -->
-  <header class="sticky top-0 z-40 bg-[#0f172a]/90 backdrop-blur-md border-b border-gray-800 px-4 py-3">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-      <!-- Left: Brand & IndexedDB Live Status -->
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-500/20">
-          C
+  <!-- Sticky Wrapper for Top Bar + Database Cards Drawer -->
+<div class="sticky top-0 z-40">
+<!-- Top Studio Navigation Bar -->
+<header class="bg-[#0f172a]/95 backdrop-blur-md border-b border-gray-800 px-4 py-2.5">
+    <div class="max-w-7xl mx-auto flex flex-wrap lg:flex-nowrap items-center justify-between gap-2">
+
+        <!-- Left: Brand & IndexedDB Live Status -->
+        <div class="flex items-center gap-2.5 shrink-0">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-500/20 shrink-0">
+                C
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h1 class="text-base sm:text-lg font-bold tracking-tight text-white whitespace-nowrap">Custom Card Creator</h1>
+                    <span id="idb-status-badge" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 whitespace-nowrap" title="100% Stored in IndexedDB (Zero Browser Cache / Zero LocalStorage)">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        IndexedDB Synced
+                    </span>
+                </div>
+                <p class="text-[10px] text-gray-400 hidden sm:block whitespace-nowrap">100% IndexedDB Engine &bull; Direct NexusDB Bridge &bull; Web &amp; Print Output</p>
+            </div>
         </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">Custom Card Creator</h1>
-            <span id="idb-status-badge" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1" title="100% Stored in IndexedDB (Zero Browser Cache / Zero LocalStorage)">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              IndexedDB Synced
-            </span>
-          </div>
-          <p class="text-[11px] text-gray-400 hidden sm:block">100% IndexedDB Engine &bull; Direct NexusDB Bridge &bull; Exact Web &amp; Print Output</p>
+
+        <!-- Center: Compact Card Size & Total Database Size Indicator (MB) -->
+        <div class="flex items-center gap-2 px-2.5 py-1 bg-gray-900/80 border border-gray-700/80 rounded-xl text-[11px] font-mono text-cyan-300 shadow-inner shrink-0 whitespace-nowrap">
+            <div class="flex items-center gap-1" title="Size of the currently selected card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>
+                <span>Card: <strong id="card-size-display" class="text-emerald-300">0.00 MB</strong></span>
+            </div>
+            <span class="text-gray-600">|</span>
+            <div class="flex items-center gap-1" title="Total size of all saved cards in IndexedDB">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                <span>DB: <strong id="db-size-display" class="text-white">0.00 MB</strong></span>
+            </div>
         </div>
-      </div>
 
-      <!-- Center: Database Size Indicator (MB) -->
-      <div class="flex items-center gap-2 px-3 py-1.5 bg-gray-900/80 border border-gray-700/80 rounded-xl text-xs font-mono text-cyan-300 shadow-inner">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-        <span>DB Size: <strong id="db-size-display" class="text-white">0.00 MB</strong></span>
-      </div>
+        <!-- Right: Database Bridge & Quick Actions -->
+        <div class="flex items-center gap-1.5 shrink-0">
+            <!-- Open IndexedDB Card Library Drawer -->
+            <button type="button" id="toggle-db-drawer-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 rounded-lg text-xs font-semibold transition-all shadow-sm whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                <span>Database Cards</span>
+                <span id="db-card-count-pill" class="px-1.5 py-0.2 bg-indigo-500/30 rounded-full text-[10px] text-white">0</span>
+            </button>
 
-      <!-- Right: Database Bridge & Quick Actions -->
-      <div class="flex flex-wrap items-center gap-2">
-        <!-- Open IndexedDB Card Library Drawer -->
-        <button type="button" id="toggle-db-drawer-btn" class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 rounded-lg text-xs font-semibold transition-all shadow-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-          <span>Database Cards</span>
-          <span id="db-card-count-pill" class="px-1.5 py-0.2 bg-indigo-500/30 rounded-full text-[10px] text-white">0</span>
-        </button>
+            <!-- Save Current Card to Shared IndexedDB Database -->
+            <button type="button" id="save-to-db-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 rounded-lg text-xs font-semibold transition-all whitespace-nowrap" title="Save or update this card directly in the shared IndexedDB database">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Save to DB
+            </button>
 
-        <!-- Save Current Card to Shared IndexedDB Database -->
-        <button type="button" id="save-to-db-btn" class="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 rounded-lg text-xs font-semibold transition-all" title="Save or update this card directly in the shared IndexedDB database">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-          Save to DB
-        </button>
+            <!-- Paste JSON from Database -->
+            <button type="button" id="open-paste-modal-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 rounded-lg text-xs font-medium transition-all whitespace-nowrap" title="Paste JSON copied from NexusDB or Card Builder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Paste JSON
+            </button>
 
-        <!-- Paste JSON from Database -->
-        <button type="button" id="open-paste-modal-btn" class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 rounded-lg text-xs font-medium transition-all" title="Paste JSON copied from NexusDB or Card Builder">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          Paste JSON
-        </button>
+            <!-- Copy Card JSON for Database -->
+            <button type="button" id="copy-json-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 rounded-lg text-xs font-medium transition-all whitespace-nowrap" title="Copy Card JSON to clipboard to paste into NexusDB">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                Copy JSON
+            </button>
 
-        <!-- Copy Card JSON for Database -->
-        <button type="button" id="copy-json-btn" class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 rounded-lg text-xs font-medium transition-all" title="Copy Card JSON to clipboard to paste into NexusDB">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-          Copy JSON
-        </button>
+            <!-- New Blank Card -->
+            <button type="button" id="new-card-btn" class="flex items-center gap-1 px-2.5 py-1.5 bg-gray-800 hover:bg-red-950/60 border border-gray-700 hover:border-red-500/40 text-gray-300 hover:text-red-300 rounded-lg text-xs font-medium transition-all whitespace-nowrap" title="Reset form to create a fresh card">
+                New Card
+            </button>
+        </div>
 
-        <!-- New Blank Card -->
-        <button type="button" id="new-card-btn" class="flex items-center gap-1 px-3 py-1.5 bg-gray-800 hover:bg-red-950/60 border border-gray-700 hover:border-red-500/40 text-gray-300 hover:text-red-300 rounded-lg text-xs font-medium transition-all" title="Reset form to create a fresh card">
-          New Card
-        </button>
-      </div>
     </div>
-  </header>
+</header>
 
   <!-- Collapsible IndexedDB Database Cards Drawer -->
   <section id="db-drawer" class="hidden bg-[#111827] border-b border-indigo-500/30 shadow-2xl transition-all">
@@ -506,10 +560,11 @@
         </div>
       </div>
       <div id="db-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 max-h-64 overflow-y-auto pr-1">
-        <!-- Populated dynamically from IndexedDB -->
+      <!-- Populated dynamically from IndexedDB -->
       </div>
     </div>
   </section>
+</div>
 
   <!-- Main Content Container -->
   <div class="max-w-7xl mx-auto px-4 py-6">
@@ -525,10 +580,10 @@
           <span id="active-card-id-badge" class="text-[11px] font-mono px-2.5 py-1 rounded bg-gray-900 text-cyan-400 border border-gray-700">ID: New</span>
         </div>
 
-        <form id="card-form" class="space-y-5" onsubmit="return false;">
+        <form id="card-form" class="space-y-0" onsubmit="return false;">
 
           <!-- 1. BASIC INFO & SMART ELEMENT/TYPE BUILDER -->
-          <fieldset class="border border-gray-700 bg-gray-900/40 p-4 rounded-xl">
+          <fieldset class="border border-gray-700 bg-gray-900/40 p-3 rounded-xl">
             <legend class="text-sm font-bold uppercase tracking-wider px-2 text-cyan-400">Basic Info &amp; Card Type</legend>
 
             <!-- Quick Type Helper & Element Tag Toggles -->
@@ -801,9 +856,12 @@
 
       <!-- PREVIEW & DOWNLOAD CONTAINER: Right 5 Columns on Desktop (Sticky), Order 1 on Mobile -->
       <div class="lg:col-span-5 flex flex-col items-center w-full order-1 lg:order-2 lg:sticky lg:top-20">
-        <div class="w-full flex items-center justify-between mb-3 px-2">
+        <div class="w-full flex flex-wrap items-center justify-between gap-2 mb-3 px-2">
           <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Live 1:1 Card Preview (380&times;531)</span>
-          <span class="text-[11px] text-cyan-400">Drag art to pan &bull; Scroll art to zoom</span>
+          <label class="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-lg bg-gray-800/90 border border-gray-700 text-cyan-400 cursor-pointer hover:border-cyan-500/50 transition-all select-none" title="Check this box to enable dragging and scroll-zooming the card art">
+            <input type="checkbox" id="unlock-image-edit-checkbox" class="rounded border-gray-600 text-cyan-500 focus:ring-0 cursor-pointer">
+            <span>Edit Card Image (Pan &amp; Zoom)</span>
+          </label>
         </div>
 
         <!-- Dynamic Scale Wrapper for Mobile Layout Preservation -->
@@ -939,21 +997,62 @@
       Spirit: "#2dd4bf", Time: "#3b82f6", True: "#ffffff", Void: "#8b5cf6"
     };
 
-    function createBuiltinElementSvgDataUri(elementName) {
-      const color = ELEMENT_COLORS[elementName] || "#ffffff";
-      const letter = elementName.charAt(0).toUpperCase();
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-        <circle cx="16" cy="16" r="14" fill="#0f172a" stroke="${color}" stroke-width="2.5"/>
-        <circle cx="16" cy="16" r="10" fill="${color}" fill-opacity="0.22"/>
-        <text x="16" y="21.5" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="${color}" text-anchor="middle">${letter}</text>
-      </svg>`;
-      return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
-    }
+    // Returns the GitHub repository path for each uploaded element icon (from CardWebsite old)
+function getGithubDefaultElementIconPath(elementName) {
+    const imgName = elementName.charAt(0).toUpperCase() + elementName.slice(1).toLowerCase();
+    return `/CardCreator/${imgName}.png`;
+}
 
-    const builtinAffinityIcons = {};
-    ELEMENTS.forEach(el => {
-      builtinAffinityIcons[el.toLowerCase()] = createBuiltinElementSvgDataUri(el);
+const builtinAffinityIcons = {};
+ELEMENTS.forEach(el => {
+    builtinAffinityIcons[el.toLowerCase()] = getGithubDefaultElementIconPath(el);
+});
+
+// Preloads GitHub element PNGs into Base64 so html-to-image PNG downloads never miss an icon,
+// and falls back to relative "./Element.png" when testing locally outside "/CardCreator/"
+async function preloadDefaultGithubElementIcons() {
+    const loadAsDataUrl = (url) => new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+            try {
+                const canvas = document.createElement("canvas");
+                canvas.width = img.naturalWidth || 32;
+                canvas.height = img.naturalHeight || 32;
+                canvas.getContext("2d").drawImage(img, 0, 0);
+                resolve(canvas.toDataURL("image/png"));
+            } catch (e) {
+                resolve(url);
+            }
+        };
+        img.onerror = reject;
+        img.src = url;
     });
+
+    await Promise.all(ELEMENTS.map(async (el) => {
+        const key = el.toLowerCase();
+        const imgName = el.charAt(0).toUpperCase() + el.slice(1).toLowerCase();
+        const candidates = [
+            `/CardCreator/${imgName}.png`,
+            `./${imgName}.png`,
+            `/CardCreator/${key}.png`,
+            `./${key}.png`
+        ];
+        for (const path of candidates) {
+            try {
+                const dataUrl = await loadAsDataUrl(path);
+                builtinAffinityIcons[key] = dataUrl;
+                break;
+            } catch (_) {
+                // Try next path candidate
+            }
+        }
+    }));
+
+    if (typeof renderCreatureElementPills === "function") renderCreatureElementPills();
+    if (typeof renderLoadedAffinitiesDisplay === "function") renderLoadedAffinitiesDisplay();
+    if (typeof refreshAllPreviewOutputs === "function") refreshAllPreviewOutputs();
+}
 
     const CardBuilderIDB = {
       db: null,
@@ -1095,47 +1194,64 @@
       },
 
       async getDatabaseSizeMB() {
-        const db = await this.open();
-        return new Promise((resolve) => {
-          let totalBytes = 0;
-          const tx = db.transaction([STORE_CARDS, STORE_AFFINITIES], "readonly");
-          
-          const countStore = (storeName) => {
-            return new Promise((res) => {
-              const store = tx.objectStore(storeName);
-              const req = store.openCursor();
-              req.onsuccess = (e) => {
-                const cursor = e.target.result;
-                if (cursor) {
-                  const valStr = JSON.stringify(cursor.value);
-                  totalBytes += new Blob([valStr]).size;
-                  cursor.continue();
-                } else {
-                  res();
-                }
-              };
-              req.onerror = () => res();
-            });
-          };
+    const db = await this.open();
+    return new Promise((resolve) => {
+        let totalBytes = 0;
+        const tx = db.transaction([STORE_CARDS], "readonly");
+        const store = tx.objectStore(STORE_CARDS);
+        const req = store.openCursor();
+        req.onsuccess = (e) => {
+            const cursor = e.target.result;
+            if (cursor) {
+                totalBytes += getObjectSizeBytes(cursor.value);
+                cursor.continue();
+            } else {
+                const mb = totalBytes / (1024 * 1024);
+                resolve(mb.toFixed(2));
+            }
+        };
+        req.onerror = () => resolve("0.00");
+    });
+}
+};
 
-          Promise.all([countStore(STORE_CARDS), countStore(STORE_AFFINITIES)]).then(() => {
-            const mb = totalBytes / (1024 * 1024);
-            resolve(mb.toFixed(2));
-          });
-        });
-      }
-    };
+// Calculates exact byte size of any card object (ignoring volatile updatedAt timestamp)
+function getObjectSizeBytes(obj) {
+    if (!obj) return 0;
+    const clone = { ...obj };
+    delete clone.updatedAt;
+    return new Blob([JSON.stringify(clone)]).size;
+}
 
-    async function updateDatabaseSizeDisplay() {
-      const display = document.getElementById("db-size-display");
-      if (!display) return;
-      try {
-        const mbSize = await CardBuilderIDB.getDatabaseSizeMB();
-        display.textContent = `${mbSize} MB`;
-      } catch (err) {
-        display.textContent = "0.00 MB";
-      }
+function getCardSizeMB(cardObj) {
+    if (!cardObj) return "0.00";
+    const bytes = getObjectSizeBytes(cardObj);
+    return (bytes / (1024 * 1024)).toFixed(2);
+}
+
+async function updateDatabaseSizeDisplay() {
+    const dbDisplay = document.getElementById("db-size-display");
+    const cardDisplay = document.getElementById("card-size-display");
+
+    if (cardDisplay) {
+        try {
+            const currentCreatorData = getCurrentCardData();
+            const normalizedRecord = convertCreatorDataToNexusDbRecord(currentCreatorData);
+            cardDisplay.textContent = `${getCardSizeMB(normalizedRecord)} MB`;
+        } catch (err) {
+            cardDisplay.textContent = "0.00 MB";
+        }
     }
+
+    if (dbDisplay) {
+        try {
+            const mbSize = await CardBuilderIDB.getDatabaseSizeMB();
+            dbDisplay.textContent = `${mbSize} MB`;
+        } catch (err) {
+            dbDisplay.textContent = "0.00 MB";
+        }
+    }
+}
 
     /*************************************************************************
      * 2. GLOBAL STATE & CONVERTERS
@@ -2142,7 +2258,9 @@
           <div class="flex items-center justify-between gap-2 p-2.5 rounded-xl border transition-all cursor-pointer ${isCurrent ? 'bg-indigo-950/80 border-indigo-400 shadow-md' : 'bg-gray-900/90 border-gray-700/80 hover:border-cyan-500/50'}" data-load-db-card="${escapeHtml(c.id)}">
             <div class="min-w-0 flex-1">
               <div class="text-xs font-bold text-white truncate">${escapeHtml(c.cardName || "Unnamed")}</div>
-              <div class="text-[10px] text-gray-400 truncate">${escapeHtml(c.rarity || "Common")} &bull; ${escapeHtml(c.cardType || "Player")}</div>
+              <div class="text-[10px] text-gray-400 truncate">
+                  ${escapeHtml(c.rarity || "Common")} &bull; ${escapeHtml(c.cardType || "Player")} &bull; <span class="text-cyan-300 font-mono">${getCardSizeMB(c)} MB</span>
+              </div>
             </div>
             <div class="flex items-center gap-1 shrink-0">
               <span class="px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 text-[10px] font-semibold">Edit</span>
@@ -2273,47 +2391,154 @@
     /*************************************************************************
      * 10. INTERACTIVE PREVIEW & INIT
      *************************************************************************/
-    function setupInteractiveCardPreview() {
-      const imageArea = document.getElementById("card-image-area");
-      let isDraggingArt = false;
-      let startX = 0;
-      let startY = 0;
-      let startPosX = 50;
-      let startPosY = 50;
+    function isImageEditEnabled() {
+    const toggle = document.getElementById("unlock-image-edit-checkbox");
+    return Boolean(toggle && toggle.checked);
+}
 
-      imageArea.addEventListener("mousedown", (e) => {
-        if (!uploadedImageUrl) return;
+function setImageEditEnabled(enabled) {
+    const toggleTop = document.getElementById("unlock-image-edit-checkbox");
+    const toggleForm = document.getElementById("unlock-image-controls-checkbox");
+    const slidersWrapper = document.getElementById("image-sliders-wrapper");
+    const resetBtn = document.getElementById("reset-image-btn");
+    const imageArea = document.getElementById("card-image-area");
+    const sliderIds = ["image-zoom", "image-pos-x", "image-pos-y"];
+
+    if (toggleTop) toggleTop.checked = enabled;
+    if (toggleForm) toggleForm.checked = enabled;
+
+    sliderIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = !enabled;
+    });
+
+    if (resetBtn) resetBtn.disabled = !enabled;
+
+    if (slidersWrapper) {
+        slidersWrapper.classList.toggle("opacity-40", !enabled);
+        slidersWrapper.classList.toggle("pointer-events-none", !enabled);
+    }
+
+    if (imageArea) {
+        if (enabled && uploadedImageUrl) {
+            imageArea.classList.add("drag-pan-active");
+        } else {
+            imageArea.classList.remove("drag-pan-active");
+        }
+    }
+}
+
+function setupCollapsibleSections() {
+    const form = document.getElementById("card-form");
+    if (!form) return;
+
+    const fieldsets = form.querySelectorAll("fieldset");
+    fieldsets.forEach((fieldset) => {
+        const legend = fieldset.querySelector("legend");
+        if (!legend || fieldset.classList.contains("collapsible-section")) return;
+
+        fieldset.classList.add("collapsible-section");
+        legend.title = "Click to fold / unfold this section";
+
+        // Add rotating chevron icon inside the legend
+        const chevron = document.createElement("span");
+        chevron.className = "collapse-chevron text-cyan-400";
+        chevron.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+        legend.prepend(chevron);
+
+        // Move all other elements inside the fieldset into a collapsible wrapper
+        const bodyWrapper = document.createElement("div");
+        bodyWrapper.className = "fieldset-body space-y-3";
+        const childrenToMove = Array.from(fieldset.children).filter(el => el !== legend);
+        childrenToMove.forEach(child => bodyWrapper.appendChild(child));
+        fieldset.appendChild(bodyWrapper);
+
+        // Toggle fold state when clicking the legend
+        legend.addEventListener("click", () => {
+            fieldset.classList.toggle("is-collapsed");
+        });
+    });
+
+    // Add Expand All / Collapse All buttons next to the active card ID badge
+    const idBadge = document.getElementById("active-card-id-badge");
+    if (idBadge && idBadge.parentElement) {
+        const controlsWrap = document.createElement("div");
+        controlsWrap.className = "flex items-center gap-1.5";
+
+        const expandAllBtn = document.createElement("button");
+        expandAllBtn.type = "button";
+        expandAllBtn.className = "text-[11px] px-2 py-1 rounded bg-gray-900 hover:bg-gray-700 text-gray-300 border border-gray-700 transition-colors";
+        expandAllBtn.textContent = "Expand All";
+        expandAllBtn.addEventListener("click", () => {
+            fieldsets.forEach(fs => fs.classList.remove("is-collapsed"));
+        });
+
+        const collapseAllBtn = document.createElement("button");
+        collapseAllBtn.type = "button";
+        collapseAllBtn.className = "text-[11px] px-2 py-1 rounded bg-gray-900 hover:bg-gray-700 text-gray-300 border border-gray-700 transition-colors";
+        collapseAllBtn.textContent = "Collapse All";
+        collapseAllBtn.addEventListener("click", () => {
+            fieldsets.forEach(fs => fs.classList.add("is-collapsed"));
+        });
+
+        idBadge.parentElement.insertBefore(controlsWrap, idBadge);
+        controlsWrap.appendChild(expandAllBtn);
+        controlsWrap.appendChild(collapseAllBtn);
+        controlsWrap.appendChild(idBadge);
+    }
+}
+
+function setupInteractiveCardPreview() {
+    const imageArea = document.getElementById("card-image-area");
+    const toggleTop = document.getElementById("unlock-image-edit-checkbox");
+    const toggleForm = document.getElementById("unlock-image-controls-checkbox");
+
+    if (toggleTop) {
+        toggleTop.addEventListener("change", (e) => setImageEditEnabled(e.target.checked));
+    }
+    if (toggleForm) {
+        toggleForm.addEventListener("change", (e) => setImageEditEnabled(e.target.checked));
+    }
+    setImageEditEnabled(false);
+
+    let isDraggingArt = false;
+    let startX = 0;
+    let startY = 0;
+    let startPosX = 50;
+    let startPosY = 50;
+
+    imageArea.addEventListener("mousedown", (e) => {
+        if (!uploadedImageUrl || !isImageEditEnabled()) return;
         isDraggingArt = true;
         startX = e.clientX;
         startY = e.clientY;
         startPosX = parseFloat(document.getElementById("image-pos-x").value) || 50;
         startPosY = parseFloat(document.getElementById("image-pos-y").value) || 50;
-      });
+    });
 
-      window.addEventListener("mousemove", (e) => {
-        if (!isDraggingArt) return;
+    window.addEventListener("mousemove", (e) => {
+        if (!isDraggingArt || !isImageEditEnabled()) return;
+        const zoom = parseFloat(document.getElementById("image-zoom").value) || 100;
+        const zoomFactor = zoom / 100;
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
-        const zoom = parseFloat(document.getElementById("image-zoom").value) || 100;
-        const sensitivity = 100 / Math.max(zoom, 100);
-
-        const newX = Math.max(0, Math.min(100, startPosX + (dx * 0.25 * sensitivity)));
-        const newY = Math.max(0, Math.min(100, startPosY + (dy * 0.4 * sensitivity)));
-
-        document.getElementById("image-pos-x").value = newX.toFixed(1);
-        document.getElementById("image-pos-y").value = newY.toFixed(1);
+        const newPosX = Math.max(0, Math.min(100, startPosX + dx / (12 * zoomFactor)));
+        const newPosY = Math.max(0, Math.min(100, startPosY + dy / (6 * zoomFactor)));
+        document.getElementById("image-pos-x").value = newPosX.toFixed(1);
+        document.getElementById("image-pos-y").value = newPosY.toFixed(1);
         updateImageTransform();
-      });
+    });
 
-      window.addEventListener("mouseup", () => {
+    window.addEventListener("mouseup", () => {
         if (isDraggingArt) {
-          isDraggingArt = false;
-          saveDraftToIndexedDB();
+            isDraggingArt = false;
+            saveDraftToIndexedDB();
         }
-      });
+    });
 
-      imageArea.addEventListener("wheel", (e) => {
-        if (!uploadedImageUrl) return;
+    imageArea.addEventListener("wheel", (e) => {
+        // When unchecked, do not call e.preventDefault() so the page scrolls normally
+        if (!uploadedImageUrl || !isImageEditEnabled()) return;
         e.preventDefault();
         const zoomInput = document.getElementById("image-zoom");
         let currentZoom = parseFloat(zoomInput.value) || 100;
@@ -2323,7 +2548,7 @@
         zoomInput.value = currentZoom;
         updateImageTransform();
         saveDraftToIndexedDB();
-      }, { passive: false });
+    }, { passive: false });
 
       const clickMap = [
         { previewId: "card-creature-type", inputId: "input-creature-type" },
@@ -2345,9 +2570,11 @@
           pEl.style.cursor = "pointer";
           pEl.addEventListener("click", (e) => {
             e.stopPropagation();
+            const parentSection = iEl.closest("fieldset.collapsible-section");
+            if (parentSection) parentSection.classList.remove("is-collapsed");
             iEl.scrollIntoView({ behavior: "smooth", block: "center" });
             iEl.focus();
-          });
+        });
         }
       });
     }
@@ -2678,30 +2905,35 @@
         }
       });
 
+      setupCollapsibleSections();
       setupInteractiveCardPreview();
 
       try {
         await CardBuilderIDB.open();
         customAffinitiesMap = await CardBuilderIDB.getAllAffinities();
+        preloadDefaultGithubElementIcons();
         await refreshDatabaseDrawerList();
         await updateDatabaseSizeDisplay();
 
         const savedDraft = await CardBuilderIDB.loadDraft();
         if (savedDraft) {
-          populateForm(savedDraft);
+            populateForm(savedDraft);
         } else if (databaseCardsCache.length > 0) {
-          populateForm(databaseCardsCache[0]);
+            populateForm(databaseCardsCache[0]);
         } else {
-          createAttackForm({
-            type: "Effect",
-            name: "[Arcane] Data Stream",
-            desc: "Passive: Flip a coin. If heads, draw 3 cards.",
-            damage: "20"
-          });
-          refreshAllPreviewOutputs();
-          renderCreatureElementPills();
+            createAttackForm({
+                type: "Effect",
+                name: "[Arcane] Data Stream",
+                desc: "Passive: Flip a coin. If heads, draw 3 cards.",
+                damage: "20"
+            });
+            refreshAllPreviewOutputs();
+            renderCreatureElementPills();
         }
         renderLoadedAffinitiesDisplay();
+        
+        // Force calculation of both Card Size & Database Size immediately upon reload
+        await updateDatabaseSizeDisplay();
       } catch (err) {
         console.error("Initialization error:", err);
         refreshAllPreviewOutputs();
